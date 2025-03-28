@@ -3,6 +3,9 @@
 $pageTitle = "Đặt Lịch - theCleaner";
 $currentPage = "booking";
 
+// Khởi tạo session
+session_start();
+
 // Danh sách dịch vụ
 $serviceOptions = [
     ["value" => "home", "label" => "Vệ sinh nhà ở"],
@@ -31,31 +34,11 @@ $currentYear = date("Y");
 // Lấy ngày mai cho giá trị mặc định trong form
 $tomorrow = date('Y-m-d', strtotime('+1 day'));
 
-// Xử lý form nếu được gửi
-$formSubmitted = false;
-$formError = false;
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_submit'])) {
-    // Validate form
-    if (
-        !empty($_POST['bookName']) && 
-        !empty($_POST['bookEmail']) && 
-        !empty($_POST['bookPhone']) && 
-        !empty($_POST['bookAddress']) && 
-        !empty($_POST['bookService']) && 
-        !empty($_POST['bookDate']) && 
-        !empty($_POST['bookTime']) && 
-        !empty($_POST['bookArea'])
-    ) {
-        // Form đã được gửi thành công
-        $formSubmitted = true;
-        
-        // Trong một ứng dụng thực tế, bạn sẽ xử lý dữ liệu form ở đây
-        // Ví dụ: gửi email, lưu vào cơ sở dữ liệu, v.v.
-    } else {
-        // Form có lỗi
-        $formError = true;
-    }
+// Kiểm tra lỗi từ process_booking.php
+$bookingError = "";
+if (isset($_SESSION['booking_error'])) {
+    $bookingError = $_SESSION['booking_error'];
+    unset($_SESSION['booking_error']);
 }
 ?>
 <!DOCTYPE html>
@@ -80,10 +63,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_submit'])) {
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.php">Trang Chủ</a></li>
                     <li><a href="services.php">Dịch Vụ</a></li>
-                    <li><a href="about.php">Về Chúng Tôi</a></li>  <!-- Đã sửa -->
+                    <li><a href="about.php">Về Chúng Tôi</a></li>
                     <li><a href="testimonials.php">Đánh Giá</a></li>
                     <li><a href="contact.php">Liên Hệ</a></li>
-                    <li><a href="booking.php" class="btn btn-primary">Đặt Lịch</a></li>
+                    <li><a href="booking.php" class="active btn btn-primary">Đặt Lịch</a></li>
                 </ul>
             </nav>
         </div>
@@ -104,24 +87,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_submit'])) {
                 <h2>Đặt Lịch Dịch Vụ</h2>
                 <p>Điền thông tin bên dưới để đặt lịch dịch vụ vệ sinh</p>
             </div>
+            
             <div class="booking-form-container">
-                <?php if ($formSubmitted): ?>
-                <div class="form-success">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Đặt lịch thành công!</h3>
-                    <p>Cảm ơn bạn đã đặt lịch dịch vụ. Chúng tôi sẽ liên hệ xác nhận trong thời gian sớm nhất.</p>
-                    <p>Nếu bạn cần hỗ trợ thêm, vui lòng liên hệ số điện thoại: <a href="tel:+84123456789">+84 123 456 789</a></p>
-                    <a href="services.php" class="btn btn-primary">Xem Thêm Dịch Vụ</a>
-                </div>
-                <?php else: ?>
-                
-                <?php if ($formError): ?>
-                <div class="form-error">
-                    <p>Vui lòng điền đầy đủ thông tin trong form.</p>
+                <?php if (!empty($bookingError)): ?>
+                <div class="alert alert-error">
+                    <p><?php echo $bookingError; ?></p>
                 </div>
                 <?php endif; ?>
                 
-                <form id="bookingForm" class="booking-form" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                <!-- QUAN TRỌNG: Form đặt lịch với method="post" và action="process_booking.php" -->
+                <form id="bookingForm" class="booking-form" method="post" action="process_booking.php">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="bookName">Họ và tên</label>
@@ -139,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_submit'])) {
                         </div>
                         <div class="form-group">
                             <label for="bookAddress">Địa chỉ</label>
-                            <input type="text" id="bookAddress" name="bookAddress" class="form-control" placeholder="Nhập địa chỉ" required>
+                            <input type="text" id="bookAddress" name="bookAddress" class="form-control" placeholder="Nhập địa chỉ đầy đủ" required>
                         </div>
                     </div>
                     <div class="form-row">
@@ -176,10 +151,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_submit'])) {
                         <label for="bookNote">Ghi chú thêm</label>
                         <textarea id="bookNote" name="bookNote" class="form-control" rows="3"></textarea>
                     </div>
-                    <input type="hidden" name="booking_submit" value="1">
+                    <div class="form-pricing">
+                        <div class="pricing-note">
+                            <p><i class="fas fa-info-circle"></i> Giá dịch vụ được tính dựa trên loại dịch vụ và diện tích. Chi tiết giá sẽ được hiển thị ở trang thanh toán.</p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="formattedAddress" id="formattedAddress" value="">
+                    <input type="hidden" name="latitude" id="latitude" value="">
+                    <input type="hidden" name="longitude" id="longitude" value="">
+                    <!-- Nút đặt lịch - Submit form -->
                     <button type="submit" class="btn btn-primary">Đặt Lịch Ngay</button>
                 </form>
-                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -267,8 +249,76 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['booking_submit'])) {
     
     <!-- Custom Scripts -->
     <script src="scripts/script.js"></script>
-    <script src="scripts/booking.js"></script>
-
-
+    <script>
+    // JavaScript cho trang đặt lịch
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("DOM loaded for booking page");
+        
+        // Thiết lập ngày tối thiểu cho đặt lịch (ngày mai)
+        const dateInput = document.getElementById('bookDate');
+        if (dateInput) {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            dateInput.setAttribute('min', tomorrowStr);
+        }
+        
+        // Xác thực form trước khi gửi
+        const bookingForm = document.getElementById('bookingForm');
+        if (bookingForm) {
+            bookingForm.addEventListener('submit', function(e) {
+                // Kiểm tra các trường bắt buộc
+                const requiredFields = [
+                    { id: 'bookName', message: 'Vui lòng nhập họ tên' },
+                    { id: 'bookEmail', message: 'Vui lòng nhập email' },
+                    { id: 'bookPhone', message: 'Vui lòng nhập số điện thoại' },
+                    { id: 'bookAddress', message: 'Vui lòng nhập địa chỉ' },
+                    { id: 'bookService', message: 'Vui lòng chọn dịch vụ' },
+                    { id: 'bookDate', message: 'Vui lòng chọn ngày' },
+                    { id: 'bookTime', message: 'Vui lòng chọn thời gian' },
+                    { id: 'bookArea', message: 'Vui lòng nhập diện tích' }
+                ];
+                
+                for (const field of requiredFields) {
+                    const element = document.getElementById(field.id);
+                    if (!element.value) {
+                        e.preventDefault();
+                        alert(field.message);
+                        element.focus();
+                        return;
+                    }
+                }
+                
+                // Kiểm tra định dạng email
+                const email = document.getElementById('bookEmail').value;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    e.preventDefault();
+                    alert('Vui lòng nhập đúng định dạng email');
+                    document.getElementById('bookEmail').focus();
+                    return;
+                }
+                
+                // Kiểm tra định dạng số điện thoại (Việt Nam)
+                const phone = document.getElementById('bookPhone').value;
+                const phoneRegex = /^(\+84|0)[3|5|7|8|9][0-9]{8}$/;
+                if (!phoneRegex.test(phone)) {
+                    e.preventDefault();
+                    alert('Vui lòng nhập đúng định dạng số điện thoại Việt Nam');
+                    document.getElementById('bookPhone').focus();
+                    return;
+                }
+                
+                // Gán địa chỉ đã định dạng nếu chưa có
+                if (!document.getElementById('formattedAddress').value) {
+                    document.getElementById('formattedAddress').value = document.getElementById('bookAddress').value;
+                }
+                
+                // Tiếp tục submit form nếu tất cả điều kiện đều hợp lệ
+                console.log('Form submitted successfully');
+            });
+        }
+    });
+    </script>
 </body>
 </html>

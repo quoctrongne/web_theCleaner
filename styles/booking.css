@@ -1,4 +1,4 @@
-/* CSS Trang đặt lịch */
+/* CSS cho trang đặt lịch */
 
 /* Book Service Section */
 .book-service {
@@ -23,7 +23,8 @@
     font-weight: 600;
 }
 
-/* Address autocomplete styles */
+/* Xóa các style cho address-search-container và address-suggestions */
+/* 
 .address-search-container {
     position: relative;
 }
@@ -67,8 +68,9 @@
     color: #666;
     margin-top: 3px;
 }
+*/
 
-/* Booking Process */
+/* Booking Process - phần này giữ nguyên */
 .booking-process {
     padding: 100px 0;
 }
@@ -112,23 +114,39 @@
     color: #555;
 }
 
-/* CTA Section */
-.cta .cta-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
+/* Thêm style cho alert thông báo lỗi */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
 }
 
-.cta .btn-outline {
-    background: transparent;
-    border: 2px solid #fff;
-    color: #fff;
+.alert-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
 }
 
-.cta .btn-outline:hover {
-    background: #fff;
+/* Thêm style cho phần thông tin giá */
+.form-pricing {
+    margin-bottom: 20px;
+}
+
+.pricing-note {
+    background-color: #e8f4f8;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.pricing-note p {
+    margin: 0;
+    color: #555;
+}
+
+.pricing-note i {
     color: var(--primary-color);
+    margin-right: 5px;
 }
 
 /* Responsive Styles */

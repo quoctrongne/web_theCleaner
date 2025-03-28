@@ -1,174 +1,8 @@
-// JavaScript for booking.php
+// JavaScript cho trang đặt lịch
+// Phiên bản không sử dụng Google Maps API
 
-// Flag để kiểm tra trạng thái tải API
-let isGoogleMapsAPILoaded = false;
-
-// Hàm kiểm tra và chờ API tải xong
-function waitForGoogleMapsAPI() {
-    return new Promise((resolve, reject) => {
-        const checkInterval = setInterval(() => {
-            if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-                clearInterval(checkInterval);
-                isGoogleMapsAPILoaded = true;
-                resolve();
-            }
-        }, 100);
-
-        // Timeout sau 10 giây
-        setTimeout(() => {
-            clearInterval(checkInterval);
-            reject(new Error('Google Maps API tải quá chậm'));
-        }, 10000);
-    });
-}
-
-// Hàm callback cho Google Maps API
-function initPlacesAPI() {
-    console.log("Google Maps Places API loaded");
-    isGoogleMapsAPILoaded = true;
-}
-
-// Đảm bảo hàm callback có sẵn trong window
-window.initPlacesAPI = initPlacesAPI;
-
-// Set up autocomplete for address input
-    // Xử lý sự kiện khi địa chỉ được chọn
-    autocomplete.addListener("place_changed", () => {
-        const place = autocomplete.getPlace();
-        
-        if (!place.geometry) {
-            console.log("Không tìm thấy thông tin địa chỉ");
-            return;
-        }
-        
-        // Lưu thông tin địa chỉ
-        document.getElementById("formattedAddress").value = place.formatted_address || addressInput.value;
-        document.getElementById("latitude").value = place.geometry.location.lat();
-        document.getElementById("longitude").value = place.geometry.location.lng();
-        
-        console.log("Địa chỉ đã chọn:", place.formatted_address);
-    });
-    document.addEventListener('DOMContentLoaded', function() {
-    const bookingForm = document.getElementById('bookingForm');
-    if (bookingForm) {
-        bookingForm.addEventListener('submit', function(e) {
-            const name = document.getElementById('bookName').value;
-            const email = document.getElementById('bookEmail').value;
-            const phone = document.getElementById('bookPhone').value;
-            const address = document.getElementById('bookAddress').value;
-            const service = document.getElementById('bookService').value;
-            const date = document.getElementById('bookDate').value;
-            const time = document.getElementById('bookTime').value;
-            const area = document.getElementById('bookArea').value;
-            
-            // Validate email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Vui lòng nhập đúng định dạng email.');
-                e.preventDefault();
-                return;
-            }
-            
-            // Validate phone
-            const phoneRegex = /^(\+84|0)[3|5|7|8|9][0-9]{8}$/;
-            if (!phoneRegex.test(phone)) {
-                alert('Vui lòng nhập đúng số điện thoại Việt Nam.');
-                e.preventDefault();
-                return;
-            }
-            
-            // Validate date
-            const selectedDate = new Date(date);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            if (selectedDate < today) {
-                alert('Vui lòng chọn ngày trong tương lai.');
-                e.preventDefault();
-                return;
-            }
-        });
-    }
-});
-    // Add event listener for input changes
-    addressInput.addEventListener('input', function() {
-        const input = this.value;
-        
-        if (input.length > 2) {
-            // Request predictions from the AutocompleteService
-            autocompleteService.getPlacePredictions({
-                input: input,
-                componentRestrictions: { country: 'vn' }, 
-                types: ['address']
-            }, displaySuggestions);
-        } else {
-            suggestionsContainer.style.display = 'none';
-        }
-    });
-    
-    // Display suggestions in the dropdown
-    function displaySuggestions(predictions, status) {
-        suggestionsContainer.innerHTML = '';
-        
-        if (status !== google.maps.places.PlacesServiceStatus.OK || !predictions) {
-            suggestionsContainer.style.display = 'none';
-            return;
-        }
-        
-        predictions.forEach(prediction => {
-            const item = document.createElement('div');
-            item.className = 'suggestion-item';
-            
-            const mainText = document.createElement('div');
-            mainText.className = 'main-text';
-            mainText.textContent = prediction.structured_formatting.main_text;
-            
-            const secondaryText = document.createElement('div');
-            secondaryText.className = 'secondary-text';
-            secondaryText.textContent = prediction.structured_formatting.secondary_text || '';
-            
-            item.appendChild(mainText);
-            item.appendChild(secondaryText);
-            
-            item.addEventListener('click', () => {
-                addressInput.value = prediction.description;
-                
-                // Get place details
-                placesService.getDetails({
-                    placeId: prediction.place_id,
-                    fields: ['formatted_address', 'geometry']
-                }, (place, status) => {
-                    if (status === google.maps.places.PlacesServiceStatus.OK) {
-                        // Store formatted address and coordinates
-                        document.getElementById('formattedAddress').value = place.formatted_address;
-                        document.getElementById('latitude').value = place.geometry.location.lat();
-                        document.getElementById('longitude').value = place.geometry.location.lng();
-                        
-                        console.log("Selected address:", place.formatted_address);
-                        console.log("Coordinates:", place.geometry.location.lat(), place.geometry.location.lng());
-                    }
-                });
-                
-                suggestionsContainer.style.display = 'none';
-            });
-            
-            suggestionsContainer.appendChild(item);
-        });
-        
-        suggestionsContainer.style.display = 'block';
-    }
-    
-    // Close suggestions when clicking outside
-    document.addEventListener('click', function(e) {
-        if (e.target !== addressInput && !suggestionsContainer.contains(e.target)) {
-            suggestionsContainer.style.display = 'none';
-        }
-    });
-
-
-// Set up event listeners when DOM is loaded
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log("DOM fully loaded");
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM đã tải xong cho trang đặt lịch");
     
     // Thiết lập ngày tối thiểu cho đặt lịch (ngày mai)
     const dateInput = document.getElementById('bookDate');
@@ -179,36 +13,28 @@ document.addEventListener('DOMContentLoaded', async function() {
         dateInput.setAttribute('min', tomorrowStr);
     }
     
-    // Booking form validation and submission
+    // Xác thực và xử lý submit form đặt lịch
     const bookingForm = document.getElementById('bookingForm');
     if (bookingForm) {
         bookingForm.addEventListener('submit', function(e) {
-            // Basic validation
+            // Xác thực cơ bản
             const name = document.getElementById('bookName').value;
             const email = document.getElementById('bookEmail').value;
             const phone = document.getElementById('bookPhone').value;
             const address = document.getElementById('bookAddress').value;
-            const formattedAddress = document.getElementById('formattedAddress').value;
             const service = document.getElementById('bookService').value;
             const date = document.getElementById('bookDate').value;
             const time = document.getElementById('bookTime').value;
             const area = document.getElementById('bookArea').value;
             
-            // Check if all required fields are filled
+            // Kiểm tra xem tất cả các trường bắt buộc đã được điền chưa
             if (!name || !email || !phone || !address || !service || !date || !time || !area) {
                 alert('Vui lòng điền đầy đủ thông tin.');
                 e.preventDefault();
                 return;
             }
             
-            // Check if address has been selected from suggestions
-            if (!formattedAddress) {
-                alert('Vui lòng chọn một địa chỉ từ danh sách gợi ý.');
-                e.preventDefault();
-                return;
-            }
-            
-            // Validate email format
+            // Xác thực định dạng email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 alert('Vui lòng nhập đúng định dạng email.');
@@ -216,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            // Validate phone number (simple validation for Vietnamese phone numbers)
+            // Xác thực số điện thoại (xác thực đơn giản cho số điện thoại Việt Nam)
             const phoneRegex = /^(\+84|0)[3|5|7|8|9][0-9]{8}$/;
             if (!phoneRegex.test(phone)) {
                 alert('Vui lòng nhập đúng số điện thoại Việt Nam.');
@@ -224,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            // Validate date (must be a future date)
+            // Xác thực ngày (phải là ngày trong tương lai)
             const selectedDate = new Date(date);
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -235,16 +61,19 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            // Form submission will continue if all validations pass
+            // Xác thực diện tích (phải là số dương)
+            if (parseInt(area) <= 0) {
+                alert('Diện tích phải là số dương.');
+                e.preventDefault();
+                return;
+            }
+            
+            // Ghi log thông tin đặt lịch để debug
             console.log({
                 name,
                 email,
                 phone,
-                address: formattedAddress,
-                location: {
-                    lat: document.getElementById('latitude').value,
-                    lng: document.getElementById('longitude').value
-                },
+                address,
                 service,
                 date,
                 time,
@@ -252,9 +81,69 @@ document.addEventListener('DOMContentLoaded', async function() {
                 note: document.getElementById('bookNote').value
             });
             
-            // Form will be submitted normally since we're not calling e.preventDefault() here
+            // Nếu mọi thứ hợp lệ, form sẽ được gửi bình thường
         });
     }
     
+    // Xử lý chọn dịch vụ để tính toán giá ước tính
+    const serviceSelect = document.getElementById('bookService');
+    const areaInput = document.getElementById('bookArea');
     
+    if (serviceSelect && areaInput) {
+        // Hàm cập nhật ước tính giá
+        const updatePriceEstimate = function() {
+            const service = serviceSelect.value;
+            const area = parseInt(areaInput.value) || 0;
+            
+            // Đây chỉ là minh họa, bạn sẽ triển khai logic tính giá thực tế ở đây
+            if (service && area > 0) {
+                console.log(`Đang tính giá cho dịch vụ ${service} với diện tích ${area}m²`);
+                // Bạn có thể hiển thị ước tính giá trên trang nếu cần
+                // const priceElement = document.getElementById('estimatedPrice');
+                // if (priceElement) {
+                //     priceElement.textContent = calculatePrice(service, area) + ' đ';
+                // }
+            }
+        };
+        
+        serviceSelect.addEventListener('change', updatePriceEstimate);
+        areaInput.addEventListener('input', updatePriceEstimate);
+    }
+    
+    // Xử lý reset form (nếu cần)
+    const resetButton = document.querySelector('.booking-form button[type="reset"]');
+    if (resetButton) {
+        resetButton.addEventListener('click', function() {
+            // Dọn dẹp bất kỳ trạng thái hoặc phần tử UI tùy chỉnh nào khi form được reset
+            console.log("Form đã được reset");
+        });
+    }
 });
+
+// Tùy chọn: Hàm tính giá dựa trên dịch vụ và diện tích
+function calculatePrice(service, area) {
+    let basePrice = 0;
+    
+    // Logic tính giá đơn giản (nên được thay thế bằng cấu trúc tính giá thực tế của bạn)
+    if (service === 'home') {
+        // Giá vệ sinh nhà ở
+        if (area < 50) {
+            basePrice = 500000;
+        } else if (area < 100) {
+            basePrice = 800000;
+        } else {
+            basePrice = 1000000 + (area - 100) * 8000;
+        }
+    } else if (service === 'office') {
+        // Giá vệ sinh văn phòng
+        if (area < 100) {
+            basePrice = area * 15000;
+        } else if (area < 300) {
+            basePrice = area * 13000;
+        } else {
+            basePrice = area * 11000;
+        }
+    }
+    
+    return basePrice.toLocaleString('vi-VN');
+}

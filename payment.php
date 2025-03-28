@@ -1,9 +1,17 @@
 <?php
-// Khởi tạo session nếu chưa có
+// Hiển thị lỗi - chỉ sử dụng trong môi trường phát triển
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Khởi tạo session
 session_start();
 
-// Kiểm tra xem có thông tin đặt lịch không
-if (!isset($_SESSION['booking_info']) || empty($_SESSION['booking_info'])) {
+// Kiểm tra xem thông tin đặt lịch có trong session không
+if (!isset($_SESSION['booking_info']) || !isset($_SESSION['estimated_price'])) {
+    // Debug - Hiển thị thông tin session
+    // echo "<pre>Session: "; print_r($_SESSION); echo "</pre>"; exit;
+    
     // Chuyển hướng về trang đặt lịch nếu không có thông tin
     header("Location: booking.php");
     exit;
@@ -11,83 +19,81 @@ if (!isset($_SESSION['booking_info']) || empty($_SESSION['booking_info'])) {
 
 // Lấy thông tin đặt lịch từ session
 $bookingInfo = $_SESSION['booking_info'];
-$name = $bookingInfo['name'] ?? 'N/A';
-$email = $bookingInfo['email'] ?? 'N/A';
-$phone = $bookingInfo['phone'] ?? 'N/A';
-$address = $bookingInfo['address'] ?? 'N/A';
-$service = $bookingInfo['service'] ?? 'N/A';
-$date = $bookingInfo['date'] ?? 'N/A';
-$time = $bookingInfo['time'] ?? 'N/A';
-$area = $bookingInfo['area'] ?? 'N/A';
-$bookingId = $bookingInfo['bookingId'] ?? 'N/A';
+$estimatedPrice = $_SESSION['estimated_price'];
 
-// Định dạng lại ngày tháng
-$formatDate = date("d/m/Y", strtotime($date));
+// Tạo mã giao dịch
+$transactionId = isset($bookingInfo['bookingId']) ? $bookingInfo['bookingId'] : 'TR'.time();
 
-// Tính toán giá tiền dựa trên dịch vụ và diện tích
-$price = 0;
-$pricePerSqm = 0;
+// Thông tin người nhận thanh toán - CẬP NHẬT THÔNG TIN CỦA BẠN Ở ĐÂY
+$merchantInfo = [
+    "name" => "theCleaner", // Thay bằng tên của bạn
+    "phone" => "0326097576", // Thay bằng số điện thoại MoMo của bạn
+    "accountName" => "CÔNG TY TNHH DỊCH VỤ VỆ SINH THE CLEANER" // Thay bằng tên tài khoản của bạn
+];
 
-if ($service == 'home' || $service == 'Vệ sinh nhà ở') {
-    if ($area <= 50) {
-        $pricePerSqm = 10000; // 10.000đ/m²
-    } else if ($area <= 100) {
-        $pricePerSqm = 9000; // 9.000đ/m²
-    } else {
-        $pricePerSqm = 8000; // 8.000đ/m²
-    }
-    $serviceLabel = 'Vệ sinh nhà ở';
-} else if ($service == 'office' || $service == 'Vệ sinh văn phòng') {
-    if ($area <= 100) {
-        $pricePerSqm = 15000; // 15.000đ/m²
-    } else if ($area <= 300) {
-        $pricePerSqm = 13000; // 13.000đ/m²
-    } else {
-        $pricePerSqm = 11000; // 11.000đ/m²
-    }
-    $serviceLabel = 'Vệ sinh văn phòng';
-} else {
-    $pricePerSqm = 10000; // Giá mặc định
-    $serviceLabel = $service;
-}
+// Lấy thông tin dịch vụ
+$serviceNames = [
+    'home' => 'Vệ sinh nhà ở',
+    'office' => 'Vệ sinh văn phòng'
+];
 
-// Tính tổng tiền
-$price = $pricePerSqm * $area;
+$serviceName = isset($serviceNames[$bookingInfo['service']]) ? $serviceNames[$bookingInfo['service']] : $bookingInfo['service'];
 
 // Lấy năm hiện tại cho footer
 $currentYear = date("Y");
 
-// Xử lý khi hoàn thành thanh toán
-$paymentCompleted = false;
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['payment_method'])) {
-    $paymentMethod = $_POST['payment_method'];
+// Chuyển đổi định dạng ngày
+$formattedDate = date('d/m/Y', strtotime($bookingInfo['date']));
+
+// Định dạng giá tiền
+$formattedPrice = number_format($estimatedPrice, 0, ',', '.') . ' đ';
+
+// Mô tả thanh toán
+$paymentDescription = "TT DV " . strtoupper($bookingInfo['service']) . " " . $bookingInfo['bookingId'];
+
+// Tạo dữ liệu QR MoMo
+// Trong thực tế, bạn sẽ cần tích hợp với API chính thức của MoMo
+// Đây là một mô phỏng đơn giản
+$qrData = [
+    "merchantName" => $merchantInfo['name'],
+    "merchantPhone" => $merchantInfo['phone'],
+    "amount" => $estimatedPrice,
+    "description" => $paymentDescription,
+    "transactionId" => $transactionId
+];
+
+// Chuyển thành chuỗi JSON để sử dụng với API
+$qrDataJson = json_encode($qrData);
+
+// Lưu thông tin giao dịch vào session để thanh toán thành công
+$_SESSION['transaction_info'] = [
+    'transaction_id' => $transactionId,
+    'amount' => $estimatedPrice,
+    'payment_method' => 'momo',
+    'status' => 'pending'
+];
+
+// Nếu có POST request xác nhận đã thanh toán
+$paymentSuccess = false;
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
+    // Trong thực tế, bạn sẽ kiểm tra trạng thái thanh toán với API của MoMo
+    // Tại đây chỉ mô phỏng xác nhận thanh toán thành công
+    $_SESSION['transaction_info']['status'] = 'completed';
+    $paymentSuccess = true;
     
-    // Lưu thông tin thanh toán vào session
-    $_SESSION['payment_info'] = [
-        'bookingId' => $bookingId,
-        'method' => $paymentMethod,
-        'amount' => $price,
-        'status' => 'completed',
-        'timestamp' => date('Y-m-d H:i:s')
-    ];
-    
-    // Chuyển hướng tới trang cảm ơn
-    header("Location: booking_success.php");
+    // Chuyển hướng tới trang xác nhận
+    header("Location: payment_confirmation.php");
     exit;
 }
-
-// Thiết lập các thông tin cơ bản cho trang
-$pageTitle = "Thanh Toán - theCleaner";
 ?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle; ?></title>
+    <title>Thanh Toán - theCleaner</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles/common.css">
-    <link rel="stylesheet" href="styles/booking.css">
     <link rel="stylesheet" href="styles/payment.css">
 </head>
 <body>
@@ -105,7 +111,7 @@ $pageTitle = "Thanh Toán - theCleaner";
                     <li><a href="about.php">Về Chúng Tôi</a></li>
                     <li><a href="testimonials.php">Đánh Giá</a></li>
                     <li><a href="contact.php">Liên Hệ</a></li>
-                    <li><a href="booking.php" class="active btn btn-primary">Đặt Lịch</a></li>
+                    <li><a href="booking.php" class="btn btn-primary">Đặt Lịch</a></li>
                 </ul>
             </nav>
         </div>
@@ -115,7 +121,7 @@ $pageTitle = "Thanh Toán - theCleaner";
     <section class="page-banner">
         <div class="container">
             <h1>Thanh Toán</h1>
-            <p>Hoàn tất đặt lịch dịch vụ của bạn</p>
+            <p>Hoàn tất thanh toán để xác nhận đặt lịch dịch vụ</p>
         </div>
     </section>
 
@@ -123,148 +129,95 @@ $pageTitle = "Thanh Toán - theCleaner";
     <section class="payment-section">
         <div class="container">
             <div class="payment-container">
-                <div class="order-summary">
+                <!-- Booking Summary -->
+                <div class="booking-summary">
                     <h2>Thông Tin Đặt Lịch</h2>
-                    <div class="booking-details">
-                        <div class="detail-row">
-                            <div class="detail-label">Mã đặt lịch:</div>
-                            <div class="detail-value"><?php echo $bookingId; ?></div>
+                    <div class="summary-details">
+                        <div class="summary-item">
+                            <span class="label">Họ và tên:</span>
+                            <span class="value"><?php echo isset($bookingInfo['name']) ? htmlspecialchars($bookingInfo['name']) : ''; ?></span>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Họ tên:</div>
-                            <div class="detail-value"><?php echo $name; ?></div>
+                        <div class="summary-item">
+                            <span class="label">Dịch vụ:</span>
+                            <span class="value"><?php echo htmlspecialchars($serviceName); ?></span>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Dịch vụ:</div>
-                            <div class="detail-value"><?php echo $serviceLabel; ?></div>
+                        <div class="summary-item">
+                            <span class="label">Ngày thực hiện:</span>
+                            <span class="value"><?php echo htmlspecialchars($formattedDate); ?></span>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Ngày thực hiện:</div>
-                            <div class="detail-value"><?php echo $formatDate; ?></div>
+                        <div class="summary-item">
+                            <span class="label">Thời gian:</span>
+                            <span class="value"><?php echo isset($bookingInfo['time']) ? htmlspecialchars($bookingInfo['time']) : ''; ?></span>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Thời gian:</div>
-                            <div class="detail-value"><?php echo $time; ?></div>
+                        <div class="summary-item">
+                            <span class="label">Địa chỉ:</span>
+                            <span class="value"><?php echo isset($bookingInfo['address']) ? htmlspecialchars($bookingInfo['address']) : ''; ?></span>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Địa chỉ:</div>
-                            <div class="detail-value"><?php echo $address; ?></div>
+                        <div class="summary-item">
+                            <span class="label">Diện tích:</span>
+                            <span class="value"><?php echo isset($bookingInfo['area']) ? htmlspecialchars($bookingInfo['area']) : ''; ?> m²</span>
                         </div>
-                        <div class="detail-row">
-                            <div class="detail-label">Diện tích:</div>
-                            <div class="detail-value"><?php echo $area; ?> m²</div>
+                        <?php if (!empty($bookingInfo['note'])): ?>
+                        <div class="summary-item">
+                            <span class="label">Ghi chú:</span>
+                            <span class="value"><?php echo htmlspecialchars($bookingInfo['note']); ?></span>
                         </div>
-                    </div>
-
-                    <div class="price-calculation">
-                        <h3>Chi Tiết Giá</h3>
-                        <div class="price-row">
-                            <div class="price-label">Đơn giá:</div>
-                            <div class="price-value"><?php echo number_format($pricePerSqm, 0, ',', '.'); ?> đ/m²</div>
-                        </div>
-                        <div class="price-row">
-                            <div class="price-label">Diện tích:</div>
-                            <div class="price-value"><?php echo $area; ?> m²</div>
-                        </div>
-                        <div class="price-row total">
-                            <div class="price-label">Tổng thanh toán:</div>
-                            <div class="price-value"><?php echo number_format($price, 0, ',', '.'); ?> đ</div>
+                        <?php endif; ?>
+                        <div class="summary-item total">
+                            <span class="label">Tổng thanh toán:</span>
+                            <span class="value"><?php echo $formattedPrice; ?></span>
                         </div>
                     </div>
                 </div>
-
+                
+                <!-- Payment Methods -->
                 <div class="payment-methods">
                     <h2>Phương Thức Thanh Toán</h2>
-                    <form id="paymentForm" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                        <div class="payment-options">
-                            <div class="payment-option">
-                                <input type="radio" id="momo" name="payment_method" value="momo" checked>
-                                <label for="momo">
-                                    <div class="payment-icon momo-icon">
-                                        <img src="images/momo-logo.png" alt="MoMo">
-                                    </div>
-                                    <div class="payment-info">
-                                        <h3>Ví MoMo</h3>
-                                        <p>Quét mã QR hoặc chuyển khoản đến số điện thoại: <strong>0326097576</strong></p>
-                                    </div>
-                                </label>
-                                <div class="payment-details" id="momo-details">
-                                    <div class="qr-code">
-                                        <img src="images/momo-qr.png" alt="MoMo QR Code">
-                                        <p>Quét mã QR để thanh toán</p>
-                                    </div>
-                                    <div class="momo-info">
-                                        <p><strong>Thông tin thanh toán:</strong></p>
-                                        <ul>
-                                            <li>Số điện thoại: <span id="momo-phone">0326097576</span> 
-                                                <button type="button" class="copy-info" data-copy="0326097576">
-                                                    <i class="fas fa-copy"></i> Sao chép
-                                                </button>
-                                            </li>
-                                            <li>Tên người nhận: theCleaner</li>
-                                            <li>Số tiền: <?php echo number_format($price, 0, ',', '.'); ?> đ</li>
-                                            <li>Nội dung chuyển khoản: <span id="momo-content"><?php echo $bookingId; ?></span>
-                                                <button type="button" class="copy-info" data-copy="<?php echo $bookingId; ?>">
-                                                    <i class="fas fa-copy"></i> Sao chép
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+                    <div class="momo-container">
+                        <div class="momo-info">
+                            <div class="momo-icon">
+                                <i class="fas fa-qrcode"></i>
                             </div>
-
-                            <div class="payment-option">
-                                <input type="radio" id="bank-transfer" name="payment_method" value="bank-transfer">
-                                <label for="bank-transfer">
-                                    <div class="payment-icon bank-icon">
-                                        <i class="fas fa-university"></i>
-                                    </div>
-                                    <div class="payment-info">
-                                        <h3>Chuyển khoản ngân hàng</h3>
-                                        <p>Chuyển khoản trực tiếp đến tài khoản ngân hàng của chúng tôi</p>
-                                    </div>
-                                </label>
-                                <div class="payment-details" id="bank-details">
-                                    <div class="bank-info">
-                                        <p><strong>Thông tin tài khoản:</strong></p>
-                                        <ul>
-                                            <li>Ngân hàng: Vietcombank</li>
-                                            <li>Số tài khoản: <span id="bank-account">1234567890</span>
-                                                <button type="button" class="copy-info" data-copy="1234567890">
-                                                    <i class="fas fa-copy"></i> Sao chép
-                                                </button>
-                                            </li>
-                                            <li>Chủ tài khoản: CÔNG TY TNHH THE CLEANER</li>
-                                            <li>Số tiền: <?php echo number_format($price, 0, ',', '.'); ?> đ</li>
-                                            <li>Nội dung chuyển khoản: <span id="bank-content"><?php echo $bookingId; ?></span>
-                                                <button type="button" class="copy-info" data-copy="<?php echo $bookingId; ?>">
-                                                    <i class="fas fa-copy"></i> Sao chép
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="payment-option">
-                                <input type="radio" id="cash" name="payment_method" value="cash">
-                                <label for="cash">
-                                    <div class="payment-icon cash-icon">
-                                        <i class="fas fa-money-bill-wave"></i>
-                                    </div>
-                                    <div class="payment-info">
-                                        <h3>Thanh toán khi hoàn thành</h3>
-                                        <p>Thanh toán bằng tiền mặt sau khi dịch vụ được thực hiện</p>
-                                    </div>
-                                </label>
+                            <div class="momo-details">
+                                <h3>Thanh toán qua MoMo</h3>
+                                <p>Quét mã QR bằng ứng dụng MoMo để thanh toán</p>
                             </div>
                         </div>
-
-                        <div class="payment-actions">
-                            <a href="booking.php" class="btn btn-outline">Quay Lại</a>
-                            <button type="submit" class="btn btn-primary">Xác Nhận Thanh Toán</button>
+                        
+                        <div class="qr-container">
+                            <div class="qr-code">
+                                <!-- Sử dụng QR generator của momo_qr_generator.php -->
+                                <img src="momo_qr_generator.php?phone=<?php echo urlencode($merchantInfo['phone']); ?>&amount=<?php echo urlencode($estimatedPrice); ?>&description=<?php echo urlencode($paymentDescription); ?>&name=<?php echo urlencode($merchantInfo['name']); ?>" alt="MoMo QR Code">
+                                <p class="qr-note">Quét mã bằng ứng dụng MoMo</p>
+                            </div>
+                            <div class="qr-instructions">
+                                <h4>Hướng dẫn thanh toán:</h4>
+                                <ol>
+                                    <li>Mở ứng dụng MoMo trên điện thoại</li>
+                                    <li>Chọn "Quét mã" hoặc biểu tượng QR</li>
+                                    <li>Quét mã QR bên trái</li>
+                                    <li>Xác nhận thông tin và số tiền thanh toán</li>
+                                    <li>Hoàn tất thanh toán trên ứng dụng</li>
+                                    <li>Sau khi thanh toán thành công, nhấn "Xác nhận đã thanh toán" bên dưới</li>
+                                </ol>
+                                
+                                <div class="momo-payment-info">
+                                    <p><strong>Thông tin người nhận:</strong> <?php echo htmlspecialchars($merchantInfo['accountName']); ?></p>
+                                    <p><strong>Số điện thoại:</strong> <?php echo htmlspecialchars($merchantInfo['phone']); ?></p>
+                                    <p><strong>Số tiền:</strong> <?php echo $formattedPrice; ?></p>
+                                    <p><strong>Nội dung chuyển khoản:</strong> <?php echo htmlspecialchars($paymentDescription); ?></p>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+                    
+                    <div class="payment-actions">
+                        <a href="booking.php" class="btn btn-outline">Quay Lại</a>
+                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                            <input type="hidden" name="confirm_payment" value="1">
+                            <button type="submit" class="btn btn-primary">Xác Nhận Đã Thanh Toán</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -321,6 +274,15 @@ $pageTitle = "Thanh Toán - theCleaner";
     </footer>
 
     <script src="scripts/script.js"></script>
-    <script src="scripts/payment.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tự động làm mới QR code mỗi 5 phút để đảm bảo tính hợp lệ
+            setTimeout(function() {
+                if (!document.hidden) {
+                    location.reload();
+                }
+            }, 300000); // 5 phút = 300,000 ms
+        });
+    </script>
 </body>
 </html>
