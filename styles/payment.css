@@ -249,6 +249,91 @@
     color: #555;
 }
 
+/* Assigned Staff Section */
+.assigned-staff {
+    padding: 40px 0;
+    background-color: #f8f9fa;
+}
+
+.staff-profile {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.staff-avatar {
+    position: relative;
+    flex: 0 0 250px;
+}
+
+.staff-avatar img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.staff-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.staff-rating i {
+    margin-right: 5px;
+}
+
+.staff-details {
+    flex: 1;
+    padding: 30px;
+}
+
+.staff-details h3 {
+    font-size: 24px;
+    color: var(--dark-color);
+    margin-bottom: 20px;
+}
+
+.staff-info {
+    margin-bottom: 20px;
+}
+
+.staff-info p {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.staff-info p strong {
+    color: var(--dark-color);
+    width: 150px;
+    display: inline-block;
+}
+
+.staff-note {
+    background-color: #e8f4f8;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.staff-note p {
+    color: #555;
+    margin: 0;
+}
+
+.staff-note i {
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
 /* Confirmation Details */
 .confirmation-details {
     margin-bottom: 40px;
@@ -400,6 +485,15 @@
     
     .qr-code {
         margin-bottom: 20px;
+    }
+
+    .staff-profile {
+        flex-direction: column;
+    }
+
+    .staff-avatar {
+        width: 100%;
+        flex: none;
     }
 }
 
