@@ -1,0 +1,18 @@
+Array
+(
+    [booking_info] => Array
+        (
+            [bookingId] => BOOK17433227192163
+            [name] => trọng
+            [email] => nguyenquoctrongbt2016@gmail.com
+            [phone] => 0326097576
+            [address] => quận 8
+            [service] => home
+            [date] => 2025-03-31
+            [time] => 10-12
+            [area] => 75
+            [note] => 
+        )
+
+    [estimated_price] => 800000
+)

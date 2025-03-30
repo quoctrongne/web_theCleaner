@@ -1,4 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const menuBtn = document.getElementById('menuBtn');
+    const navMenu = document.getElementById('navMenu');
+    
+    // Mobile Menu Toggle
+    if (menuBtn && navMenu) {
+        menuBtn.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+        });
+    }
+
+    // Xử lý form đặt lịch
     const bookingForm = document.getElementById('bookingForm');
     const addressInput = document.getElementById('bookAddress');
 
@@ -13,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const time = document.getElementById('bookTime').value;
             const area = document.getElementById('bookArea').value;
 
+            // Xóa thông báo lỗi cũ
             const errorElements = document.querySelectorAll('.error-message');
             errorElements.forEach(el => el.remove());
 
@@ -67,10 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (hasError) {
                 e.preventDefault();
-            } else {
-                // Điều hướng sang trang thanh toán nếu không có lỗi
-                window.location.href = 'payment.php'; // Điều hướng sang trang thanh toán
             }
+            // Khi không có lỗi, form sẽ submit đến process_booking.php
         });
     }
 
@@ -84,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         inputElement.parentNode.insertBefore(errorDiv, inputElement.nextSibling);
     }
 
+    // Thiết lập ngày tối thiểu cho đặt lịch
     const dateInput = document.getElementById('bookDate');
     if (dateInput) {
         const tomorrow = new Date();
@@ -92,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dateInput.setAttribute('min', tomorrowStr);
     }
 
+    // Xử lý dynamically tính giá
     const serviceSelect = document.getElementById('bookService');
     const areaInput = document.getElementById('bookArea');
 
@@ -101,26 +113,45 @@ document.addEventListener('DOMContentLoaded', function() {
             const area = parseInt(areaInput.value) || 0;
 
             if (service && area > 0) {
-                console.log(`Đang tính giá cho dịch vụ ${service} với diện tích ${area}m²`);
+                const priceEstimate = calculatePrice(service, area);
+                const priceNote = document.querySelector('.pricing-note p');
+                if (priceNote) {
+                    priceNote.innerHTML = `<i class="fas fa-info-circle"></i> Ước tính giá dịch vụ: <strong>${priceEstimate} đ</strong>. Chi tiết giá sẽ được hiển thị ở trang thanh toán.`;
+                }
             }
         };
 
         serviceSelect.addEventListener('change', updatePriceEstimate);
         areaInput.addEventListener('input', updatePriceEstimate);
     }
-
-    const resetButton = document.querySelector('.booking-form button[type="reset"]');
-    if (resetButton) {
-        resetButton.addEventListener('click', function() {
-            console.log("Form đã được reset");
+    
+    // Xử lý FAQ Accordion
+    const faqItems = document.querySelectorAll('.faq-item');
+    if (faqItems.length > 0) {
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            if (question) {
+                question.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    // Đóng tất cả các item khác
+                    faqItems.forEach(otherItem => {
+                        otherItem.classList.remove('active');
+                    });
+                    // Toggle active class cho item hiện tại
+                    if (!isActive) {
+                        item.classList.add('active');
+                    }
+                });
+            }
         });
     }
 });
 
+// Hàm tính giá dựa trên dịch vụ và diện tích
 function calculatePrice(service, area) {
     let basePrice = 0;
 
-    if (service === 'home') {
+    if (service === 'home') { // Vệ sinh nhà ở
         if (area < 50) {
             basePrice = 500000;
         } else if (area < 100) {
@@ -128,7 +159,7 @@ function calculatePrice(service, area) {
         } else {
             basePrice = 1000000 + (area - 100) * 8000;
         }
-    } else if (service === 'office') {
+    } else if (service === 'office') { // Vệ sinh văn phòng
         if (area < 100) {
             basePrice = area * 15000;
         } else if (area < 300) {
