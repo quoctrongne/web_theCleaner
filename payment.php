@@ -81,9 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
     $_SESSION['transaction_info']['status'] = 'completed';
     $paymentSuccess = true;
     
-    // Chuyển hướng tới trang xác nhận
-    header("Location: payment_confirmation.php");
-    exit;
+    // Không chuyển hướng ngay để hiển thị thông báo thành công
 }
 ?>
 <!DOCTYPE html>
@@ -95,6 +93,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles/common.css">
     <link rel="stylesheet" href="styles/payment.css">
+    <link rel="stylesheet" href="styles/payment_styles.css">
+    <!-- CSS cho thông báo thanh toán thành công -->
+    <link rel="stylesheet" href="styles/payment_success.css">
 </head>
 <body>
     <!-- Header -->
@@ -185,7 +186,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
                         </div>
                         
                         <div class="qr-container">
-                            <div class="qr-code">
+                            <div class="qr-code" id="qrCodeBox">
                                 <!-- Sử dụng QR generator của momo_qr_generator.php -->
                                 <img src="momo_qr_generator.php?phone=<?php echo urlencode($merchantInfo['phone']); ?>&amount=<?php echo urlencode($estimatedPrice); ?>&description=<?php echo urlencode($paymentDescription); ?>&name=<?php echo urlencode($merchantInfo['name']); ?>" alt="MoMo QR Code">
                                 <p class="qr-note">Quét mã bằng ứng dụng MoMo</p>
@@ -213,15 +214,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
                     
                     <div class="payment-actions">
                         <a href="booking.php" class="btn btn-outline">Quay Lại</a>
-                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id="paymentForm">
                             <input type="hidden" name="confirm_payment" value="1">
-                            <button type="submit" class="btn btn-primary">Xác Nhận Đã Thanh Toán</button>
+                            <button type="button" id="confirmPaymentBtn" class="btn btn-primary">
+                                Xác Nhận Đã Thanh Toán
+                                <span class="loading-spinner" id="paymentSpinner"></span>
+                            </button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Overlay thông báo thanh toán thành công -->
+    <div class="payment-success-overlay" id="paymentSuccessOverlay" style="display: none;">
+        <div class="payment-success-message">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>Thanh Toán Thành Công!</h2>
+            <p>Cảm ơn bạn đã thanh toán. Đơn đặt lịch của bạn đã được xác nhận.</p>
+            <p>Bạn sẽ được chuyển đến trang xác nhận đặt lịch trong vài giây...</p>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -274,15 +290,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
     </footer>
 
     <script src="scripts/script.js"></script>
+    <!-- JavaScript xử lý thanh toán thành công -->
+    <script src="scripts/payment_success.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tự động làm mới QR code mỗi 5 phút để đảm bảo tính hợp lệ
-            setTimeout(function() {
-                if (!document.hidden) {
-                    location.reload();
-                }
-            }, 300000); // 5 phút = 300,000 ms
-        });
+    // Biến PHP được truyền vào JavaScript
+    var paymentSuccess = <?php echo $paymentSuccess ? 'true' : 'false'; ?>;
     </script>
 </body>
 </html>

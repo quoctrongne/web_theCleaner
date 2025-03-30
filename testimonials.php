@@ -390,6 +390,133 @@ function generateStarRating($rating) {
                     }
                 });
             }
+
+            // Thêm hiệu ứng chạy số cho các thống kê
+            // Hàm chạy số từ 0 đến giá trị đích
+            function animateCounter(element, targetValue, duration) {
+                // Xác định giá trị đích và định dạng
+                let target = targetValue;
+                let isPercentage = false;
+                let hasPlus = false;
+                let isDecimal = false;
+                
+                // Kiểm tra chuỗi có dấu % không
+                if (typeof targetValue === 'string' && targetValue.includes('%')) {
+                    target = parseFloat(targetValue);
+                    isPercentage = true;
+                }
+                
+                // Kiểm tra chuỗi có dấu + không
+                if (typeof targetValue === 'string' && targetValue.includes('+')) {
+                    target = parseFloat(targetValue);
+                    hasPlus = true;
+                }
+                
+                // Kiểm tra có phải dạng thập phân (như 4.9/5)
+                if (typeof targetValue === 'string' && targetValue.includes('.')) {
+                    isDecimal = true;
+                    // Nếu là format x.x/y
+                    if (targetValue.includes('/')) {
+                        let parts = targetValue.split('/');
+                        target = parseFloat(parts[0]);
+                    } else {
+                        target = parseFloat(targetValue);
+                    }
+                }
+                
+                // Chuyển đổi thành số
+                if (typeof target !== 'number') {
+                    target = parseInt(target);
+                }
+                
+                // Đặt giá trị ban đầu là 0
+                let startValue = 0;
+                let startTime = null;
+                
+                // Hàm cập nhật số
+                function updateNumber(timestamp) {
+                    if (!startTime) startTime = timestamp;
+                    
+                    // Tính toán thời gian đã trôi qua
+                    const progress = Math.min((timestamp - startTime) / duration, 1);
+                    
+                    // Tính giá trị hiện tại dựa trên thời gian
+                    let currentValue = startValue + (target - startValue) * progress;
+                    
+                    // Định dạng giá trị hiển thị
+                    let displayValue;
+                    
+                    if (isDecimal) {
+                        // Làm tròn số thập phân đến 1 chữ số
+                        currentValue = Math.round(currentValue * 10) / 10;
+                        
+                        // Nếu là format x.x/y
+                        if (typeof targetValue === 'string' && targetValue.includes('/')) {
+                            let parts = targetValue.split('/');
+                            displayValue = currentValue.toFixed(1) + '/' + parts[1];
+                        } else {
+                            displayValue = currentValue.toFixed(1);
+                        }
+                    } else {
+                        // Làm tròn số nguyên
+                        currentValue = Math.floor(currentValue);
+                        displayValue = currentValue.toString();
+                    }
+                    
+                    // Thêm dấu % nếu là phần trăm
+                    if (isPercentage) {
+                        displayValue += '%';
+                    }
+                    
+                    // Thêm dấu + nếu cần
+                    if (hasPlus) {
+                        displayValue += '+';
+                    }
+                    
+                    // Cập nhật giá trị cho phần tử
+                    element.innerHTML = displayValue;
+                    
+                    // Tiếp tục animation nếu chưa hoàn thành
+                    if (progress < 1) {
+                        requestAnimationFrame(updateNumber);
+                    }
+                }
+                
+                // Bắt đầu animation
+                requestAnimationFrame(updateNumber);
+            }
+            
+            // Bắt đầu animation khi phần tử hiển thị trong viewport
+            function handleIntersection(entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Lấy giá trị đích từ phần tử
+                        const targetValue = entry.target.getAttribute('data-target');
+                        // Bắt đầu animation với thời gian 2 giây
+                        animateCounter(entry.target, targetValue, 2000);
+                        // Ngừng theo dõi phần tử đã được xử lý
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }
+            
+            // Khởi tạo Intersection Observer
+            const options = {
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver(handleIntersection, options);
+            
+            // Chọn tất cả phần tử cần animation
+            const statElements = document.querySelectorAll('.stat h3');
+            
+            // Thêm data-target và bắt đầu theo dõi
+            statElements.forEach(element => {
+                const originalValue = element.textContent;
+                element.setAttribute('data-target', originalValue);
+                element.textContent = '0';
+                observer.observe(element);
+            });
         });
     </script>
 </body>

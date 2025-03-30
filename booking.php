@@ -23,9 +23,9 @@ $timeSlots = [
 // Quy trình đặt lịch
 $bookingProcess = [
     ["number" => 1, "title" => "Đặt Lịch", "description" => "Điền form đặt lịch trên website hoặc gọi điện trực tiếp cho chúng tôi"],
-    ["number" => 2, "title" => "Xác Nhận", "description" => "Chúng tôi sẽ liên hệ xác nhận thông tin và thời gian thực hiện"],
+    ["number" => 2, "title" => "Thanh Toán", "description" => "Thanh toán trước khi dịch vụ được bạn đặt lịch"],
     ["number" => 3, "title" => "Thực Hiện", "description" => "Nhân viên sẽ đến đúng hẹn và thực hiện dịch vụ theo yêu cầu"],
-    ["number" => 4, "title" => "Thanh Toán", "description" => "Thanh toán sau khi hoàn thành và hài lòng với dịch vụ"]
+    ["number" => 4, "title" => "Đánh Giá", "description"=> "Bạn có thể đánh giá dịch vụ của chúng tôi trên website"]
 ];
 
 // Lấy năm hiện tại cho footer

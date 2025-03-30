@@ -14,11 +14,6 @@ $featuredServices = [
         "icon" => "fas fa-building",
         "title" => "Vệ Sinh Văn Phòng",
         "description" => "Dịch vụ vệ sinh chuyên nghiệp cho văn phòng, tạo môi trường làm việc sạch sẽ và thoải mái."
-    ],
-    [
-        "icon" => "fas fa-couch",
-        "title" => "Vệ Sinh Nội Thất",
-        "description" => "Làm sạch ghế sofa, thảm, rèm cửa và các đồ nội thất khác bằng thiết bị chuyên dụng."
     ]
 ];
 
@@ -129,7 +124,7 @@ $currentYear = date("Y");
                 <?php endforeach; ?>
             </div>
             <div class="text-center mt-50">
-                <a href="services.php" class="btn btn-primary">Xem Tất Cả Dịch Vụ</a>
+                <a href="services.php" class="btn btn-primary">Xem Dịch Vụ</a>
             </div>
         </div>
     </section>
@@ -216,7 +211,6 @@ $currentYear = date("Y");
                     <ul class="footer-links">
                         <li><a href="services.php">Vệ sinh nhà ở</a></li>
                         <li><a href="services.php">Vệ sinh văn phòng</a></li>
-                        <li><a href="services.php">Vệ sinh nội thất</a></li>
                         <li><a href="services.php">Vệ sinh kính</a></li>
                         <li><a href="services.php">Vệ sinh sau xây dựng</a></li>
                         <li><a href="services.php">Khử trùng & diệt khuẩn</a></li>
