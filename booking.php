@@ -6,13 +6,16 @@ $currentPage = "booking";
 // Khởi tạo session
 session_start();
 
-// Danh sách dịch vụ
+// Kết nối đến cấu hình
+require_once 'config.php';
+
+// Lấy danh sách dịch vụ từ mảng tĩnh thay vì database
 $serviceOptions = [
-    ["value" => "home", "label" => "Vệ sinh nhà ở"],
-    ["value" => "office", "label" => "Vệ sinh văn phòng"]
+    ['value' => 'home', 'label' => 'Vệ sinh nhà ở'],
+    ['value' => 'office', 'label' => 'Vệ sinh văn phòng']
 ];
 
-// Danh sách thời gian
+// Lấy danh sách thời gian từ mảng tĩnh
 $timeSlots = [
     ["value" => "8-10", "label" => "8:00 - 10:00"],
     ["value" => "10-12", "label" => "10:00 - 12:00"],
@@ -20,7 +23,7 @@ $timeSlots = [
     ["value" => "15-17", "label" => "15:00 - 17:00"]
 ];
 
-// Quy trình đặt lịch
+// Quy trình đặt lịch (có thể lưu vào database nếu muốn)
 $bookingProcess = [
     ["number" => 1, "title" => "Đặt Lịch", "description" => "Điền form đặt lịch trên website hoặc gọi điện trực tiếp cho chúng tôi"],
     ["number" => 2, "title" => "Thanh Toán", "description" => "Thanh toán trước khi dịch vụ được bạn đặt lịch"],
@@ -95,7 +98,7 @@ if (isset($_SESSION['booking_error'])) {
                 </div>
                 <?php endif; ?>
                 
-                <!-- QUAN TRỌNG: Form đặt lịch với method="post" và action="process_booking.php" -->
+                <!-- Form đặt lịch với method="post" và action="process_booking.php" -->
                 <form id="bookingForm" class="booking-form" method="post" action="process_booking.php">
                     <div class="form-row">
                         <div class="form-group">
@@ -156,9 +159,9 @@ if (isset($_SESSION['booking_error'])) {
                             <p><i class="fas fa-info-circle"></i> Giá dịch vụ được tính dựa trên loại dịch vụ và diện tích. Chi tiết giá sẽ được hiển thị ở trang thanh toán.</p>
                         </div>
                     </div>
-                    <input type="hidden" name="formattedAddress" id="formattedAddress" value="">
-                    <input type="hidden" name="latitude" id="latitude" value="">
-                    <input type="hidden" name="longitude" id="longitude" value="">
+                    <input type="hidden" name="formattedAddress" id="formattedAddress" value=""/>
+                    <input type="hidden" name="latitude" id="latitude" value=""/>
+                    <input type="hidden" name="longitude" id="longitude" value=""/>
                     <!-- Nút đặt lịch - Submit form -->
                     <button type="submit" class="btn btn-primary">Đặt Lịch Ngay</button>
                 </form>
@@ -185,18 +188,6 @@ if (isset($_SESSION['booking_error'])) {
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <h2>Cần Hỗ Trợ Thêm?</h2>
-            <p>Nếu bạn cần tư vấn hoặc hỗ trợ về dịch vụ, hãy liên hệ trực tiếp với chúng tôi qua số điện thoại hoặc email.</p>
-            <div class="cta-buttons">
-                <a href="tel:+84123456789" class="btn"><i class="fas fa-phone"></i> Gọi Ngay</a>
-                <a href="contact.php" class="btn btn-outline">Liên Hệ</a>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -211,114 +202,11 @@ if (isset($_SESSION['booking_error'])) {
                         <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
-                <div class="footer-col">
-                    <h4>Dịch Vụ</h4>
-                    <ul class="footer-links">
-                        <li><a href="services.php">Vệ sinh nhà ở</a></li>
-                        <li><a href="services.php">Vệ sinh văn phòng</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Liên Kết Nhanh</h4>
-                    <ul class="footer-links">
-                        <li><a href="index.php">Trang chủ</a></li>
-                        <li><a href="about.php">Về chúng tôi</a></li>
-                        <li><a href="services.php">Dịch vụ</a></li>
-                        <li><a href="testimonials.php">Đánh giá</a></li>
-                        <li><a href="contact.php">Liên hệ</a></li>
-                        <li><a href="booking.php">Đặt lịch</a></li>
-                        <li><a href="#">Chính sách bảo mật</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Bản Tin</h4>
-                    <p>Đăng ký nhận thông tin khuyến mãi và dịch vụ mới nhất từ chúng tôi.</p>
-                    <form method="post" action="process_newsletter.php">
-                        <div class="form-group">
-                            <input type="email" name="subscribe_email" class="form-control" placeholder="Email của bạn" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Đăng Ký</button>
-                    </form>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; <?php echo $currentYear; ?> theCleaner. Tất cả các quyền được bảo lưu.</p>
             </div>
         </div>
     </footer>
-    
+
     <!-- Custom Scripts -->
     <script src="scripts/script.js"></script>
-    <script>
-    // JavaScript cho trang đặt lịch
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log("DOM loaded for booking page");
-        
-        // Thiết lập ngày tối thiểu cho đặt lịch (ngày mai)
-        const dateInput = document.getElementById('bookDate');
-        if (dateInput) {
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const tomorrowStr = tomorrow.toISOString().split('T')[0];
-            dateInput.setAttribute('min', tomorrowStr);
-        }
-        
-        // Xác thực form trước khi gửi
-        const bookingForm = document.getElementById('bookingForm');
-        if (bookingForm) {
-            bookingForm.addEventListener('submit', function(e) {
-                // Kiểm tra các trường bắt buộc
-                const requiredFields = [
-                    { id: 'bookName', message: 'Vui lòng nhập họ tên' },
-                    { id: 'bookEmail', message: 'Vui lòng nhập email' },
-                    { id: 'bookPhone', message: 'Vui lòng nhập số điện thoại' },
-                    { id: 'bookAddress', message: 'Vui lòng nhập địa chỉ' },
-                    { id: 'bookService', message: 'Vui lòng chọn dịch vụ' },
-                    { id: 'bookDate', message: 'Vui lòng chọn ngày' },
-                    { id: 'bookTime', message: 'Vui lòng chọn thời gian' },
-                    { id: 'bookArea', message: 'Vui lòng nhập diện tích' }
-                ];
-                
-                for (const field of requiredFields) {
-                    const element = document.getElementById(field.id);
-                    if (!element.value) {
-                        e.preventDefault();
-                        alert(field.message);
-                        element.focus();
-                        return;
-                    }
-                }
-                
-                // Kiểm tra định dạng email
-                const email = document.getElementById('bookEmail').value;
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    e.preventDefault();
-                    alert('Vui lòng nhập đúng định dạng email');
-                    document.getElementById('bookEmail').focus();
-                    return;
-                }
-                
-                // Kiểm tra định dạng số điện thoại (Việt Nam)
-                const phone = document.getElementById('bookPhone').value;
-                const phoneRegex = /^(\+84|0)[3|5|7|8|9][0-9]{8}$/;
-                if (!phoneRegex.test(phone)) {
-                    e.preventDefault();
-                    alert('Vui lòng nhập đúng định dạng số điện thoại Việt Nam');
-                    document.getElementById('bookPhone').focus();
-                    return;
-                }
-                
-                // Gán địa chỉ đã định dạng nếu chưa có
-                if (!document.getElementById('formattedAddress').value) {
-                    document.getElementById('formattedAddress').value = document.getElementById('bookAddress').value;
-                }
-                
-                // Tiếp tục submit form nếu tất cả điều kiện đều hợp lệ
-                console.log('Form submitted successfully');
-            });
-        }
-    });
-    </script>
 </body>
 </html>

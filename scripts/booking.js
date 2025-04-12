@@ -124,24 +124,23 @@ document.addEventListener('DOMContentLoaded', function() {
 function calculatePrice(service, area) {
     let basePrice = 0;
     
-    // Logic tính giá đơn giản (nên được thay thế bằng cấu trúc tính giá thực tế của bạn)
     if (service === 'home') {
         // Giá vệ sinh nhà ở
         if (area < 50) {
-            basePrice = 500000;
+            basePrice = area * 20000;  // 20.000đ/m²
         } else if (area < 100) {
-            basePrice = 800000;
+            basePrice = area * 16000;  // 16.000đ/m²
         } else {
-            basePrice = 1000000 + (area - 100) * 8000;
+            basePrice = area * 14000;  // 14.000đ/m²
         }
     } else if (service === 'office') {
         // Giá vệ sinh văn phòng
         if (area < 100) {
-            basePrice = area * 15000;
+            basePrice = area * 25000;  // 25.000đ/m²
         } else if (area < 300) {
-            basePrice = area * 13000;
+            basePrice = area * 22000;  // 22.000đ/m²
         } else {
-            basePrice = area * 11000;
+            basePrice = area * 20000;  // 20.000đ/m²
         }
     }
     

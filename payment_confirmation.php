@@ -1,6 +1,14 @@
 <?php
+// Kết nối đến database
+require_once 'database_connection.php';
+
 // Khởi tạo session
 session_start();
+
+// Debug để hiển thị lỗi
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 // Kiểm tra xem thông tin giao dịch có trong session không
 if (!isset($_SESSION['transaction_info']) || !isset($_SESSION['booking_info'])) {
@@ -14,15 +22,107 @@ $transactionInfo = $_SESSION['transaction_info'];
 $bookingInfo = $_SESSION['booking_info'];
 $estimatedPrice = $_SESSION['estimated_price'];
 
+// Debug thông tin transaction trong log
+error_log("Transaction info trước khi xử lý: " . print_r($transactionInfo, true));
+
 // Kiểm tra trạng thái thanh toán
 $paymentStatus = isset($transactionInfo['status']) ? $transactionInfo['status'] : 'pending';
 
-// Lấy thông tin dịch vụ
-$serviceNames = [
-    'home' => 'Vệ sinh nhà ở',
-    'office' => 'Vệ sinh văn phòng'
-];
-$serviceName = isset($serviceNames[$bookingInfo['service']]) ? $serviceNames[$bookingInfo['service']] : $bookingInfo['service'];
+// BẮT BUỘC trạng thái thành completed để đảm bảo lưu database
+if ($paymentStatus !== 'completed') {
+    $paymentStatus = 'completed';
+    $_SESSION['transaction_info']['status'] = 'completed';
+    error_log("Đã buộc trạng thái thanh toán thành completed");
+}
+
+// *** THÊM MỚI: Lưu thông tin vào database sau khi thanh toán thành công ***
+if ($paymentStatus === 'completed') {
+    error_log("Bắt đầu lưu dữ liệu vào database");
+
+    // Bắt đầu transaction để đảm bảo tính nhất quán của dữ liệu
+    db_begin_transaction();
+
+    try {
+        // 1. Lưu thông tin khách hàng vào bảng customers
+        $customer_data = [
+            'fullName' => $bookingInfo['name'],
+            'email' => $bookingInfo['email'],
+            'phone' => $bookingInfo['phone'],
+            'address' => $bookingInfo['address']
+        ];
+
+        $customer_id = db_insert('customers', $customer_data);
+        error_log("Đã lưu thông tin khách hàng: ID=" . $customer_id);
+
+        if (!$customer_id) {
+            throw new Exception("Không thể lưu thông tin khách hàng");
+        }
+
+        // 2. Lưu thông tin đặt lịch vào bảng bookings
+        $booking_data = [
+            'bookingID' => mt_rand(100000, 999999), // ID ngẫu nhiên
+            'user_id' => 1, // ĐANG ĐẶT GIÁ TRỊ CỤ THỂ thay vì null
+            'service_id' => $bookingInfo['service_id'],
+            'booking_date' => $bookingInfo['date'],
+            'booking_time' => $bookingInfo['time'],
+            'address' => $bookingInfo['address'],
+            'area' => $bookingInfo['area'],
+            'note' => $bookingInfo['note'] ?? '',
+            'price' => $estimatedPrice,
+            'status' => 'confirmed', // Trạng thái đã xác nhận vì đã thanh toán
+            'totalAmount' => $estimatedPrice,
+            'bookingDate' => $bookingInfo['date'],
+            'serviceID' => $bookingInfo['service_id'],
+            'amount' => $estimatedPrice,
+            'customerID' => $customer_id,
+            'employeeID' => 1 // Giá trị mặc định, có thể phân công sau
+        ];
+
+        error_log("Booking data trước khi insert: " . print_r($booking_data, true));
+
+        $booking_id = db_insert('bookings', $booking_data);
+        error_log("Đã lưu thông tin đặt lịch: ID=" . $booking_id);
+
+        if (!$booking_id) {
+            throw new Exception("Không thể lưu thông tin đặt lịch");
+        }
+
+        // 3. Lưu thông tin thanh toán vào bảng payments
+        $payment_data = [
+            'transaction_id' => $transactionInfo['transaction_id'],
+            'booking_id' => $booking_id,
+            'payment_method' => $transactionInfo['payment_method'],
+            'amount' => $estimatedPrice,
+            'status' => 'completed',
+            'payment_data' => json_encode(['description' => 'Thanh toán dịch vụ ' . $bookingInfo['service']]),
+            'paid_at' => date('Y-m-d H:i:s')
+        ];
+
+        $payment_id = db_insert('payments', $payment_data);
+        error_log("Đã lưu thông tin thanh toán: ID=" . $payment_id);
+
+        // Commit transaction nếu tất cả đều thành công
+        db_commit();
+        error_log("Đã lưu tất cả thông tin đặt lịch thành công cho booking " . $bookingInfo['bookingId']);
+
+    } catch (Exception $e) {
+        // Rollback nếu có lỗi
+        db_rollback();
+        error_log("Lỗi khi lưu thông tin đặt lịch: " . $e->getMessage());
+        $saveDbError = $e->getMessage();
+    }
+} else {
+    error_log("Không lưu vào database vì status = " . $paymentStatus . " (Điều này không nên xảy ra nữa)");
+}
+
+// Lấy thông tin dịch vụ từ database
+$serviceName = '';
+$service_row = db_get_row("SELECT name FROM services WHERE service_code = :code", ['code' => $bookingInfo['service']]);
+if ($service_row) {
+    $serviceName = $service_row['name'];
+} else {
+    $serviceName = $bookingInfo['service'];
+}
 
 // Chuyển đổi định dạng ngày
 $formattedDate = date('d/m/Y', strtotime($bookingInfo['date']));
@@ -39,57 +139,67 @@ $bookingCode = substr($bookingInfo['bookingId'], -8);
 // Lấy thời gian hiện tại cho ngày xác nhận
 $confirmationDate = date('d/m/Y H:i:s');
 
-// Thông tin nhân viên sẽ làm dịch vụ - Trong thực tế, bạn sẽ lấy thông tin này từ cơ sở dữ liệu
-// Ở đây chúng ta sẽ giả định thông tin
-$staffMembers = [
-    [
-        "id" => 1,
-        "name" => "Nguyễn Văn A",
-        "gender" => "Nam",
-        "age" => 28,
-        "rating" => 4.9,
-        "avatar" => "images/team1.jpg",
-        "experience" => "5 năm",
-        "specialization" => "Vệ sinh nhà ở",
-        "phone" => "0912345678"
-    ],
-    [
-        "id" => 2,
-        "name" => "Trần Thị B",
-        "gender" => "Nữ",
-        "age" => 32,
-        "rating" => 4.8,
-        "avatar" => "images/team2.jpg",
-        "experience" => "7 năm",
-        "specialization" => "Vệ sinh văn phòng",
-        "phone" => "0923456789"
-    ],
-    [
-        "id" => 3,
-        "name" => "Lê Văn C",
-        "gender" => "Nam",
-        "age" => 25,
-        "rating" => 4.7,
-        "avatar" => "images/team3.jpg",
-        "experience" => "3 năm",
-        "specialization" => "Vệ sinh nhà ở",
-        "phone" => "0934567890"
-    ]
-];
-
-// Chọn nhân viên dựa trên loại dịch vụ
-// Trong thực tế, bạn sẽ có thuật toán phức tạp hơn để chọn nhân viên phù hợp
+// Lấy thông tin nhân viên được phân công từ database, CHỈ lấy nhân viên vệ sinh
 $selectedStaff = null;
-foreach ($staffMembers as $staff) {
-    if ($staff["specialization"] == $serviceName) {
-        $selectedStaff = $staff;
-        break;
-    }
-}
+if (isset($booking_id)) {
+    // Kiểm tra xem đã có nhân viên vệ sinh được phân công chưa
+    $booking_staff = db_get_row(
+        "SELECT e.*, u.role
+        FROM booking_employees be
+        JOIN employees e ON be.employee_id = e.employeeID
+        LEFT JOIN users u ON e.userID = u.userID
+        WHERE be.booking_id = :booking_id
+        AND (e.department = 'Nhân viên vệ sinh' 
+             OR e.specialization LIKE '%vệ sinh%'
+             OR e.employeeID IN (SELECT employeeID FROM cleaning_staff))",
+        ['booking_id' => $booking_id]
+    );
 
-// Nếu không tìm thấy nhân viên phù hợp, chọn người đầu tiên
-if ($selectedStaff === null && count($staffMembers) > 0) {
-    $selectedStaff = $staffMembers[0];
+    if (!$booking_staff && isset($bookingInfo['service'])) {
+        // Nếu chưa có, tự động phân công nhân viên vệ sinh phù hợp với specialization
+        $staff_with_role = db_get_row(
+            "SELECT e.*, u.role
+            FROM employees e
+            LEFT JOIN users u ON e.userID = u.userID
+            WHERE e.specialization = :service
+              AND e.status = 'active'
+              AND (e.department = 'Nhân viên vệ sinh' OR e.specialization LIKE '%vệ sinh%')
+            ORDER BY e.rating DESC, RAND() LIMIT 1",
+            ['service' => $serviceName]
+        );
+
+        if ($staff_with_role) {
+            // Phân công nhân viên
+            db_insert('booking_employees', [
+                'booking_id' => $booking_id,
+                'employee_id' => $staff_with_role['employeeID']
+            ]);
+
+            $selectedStaff = $staff_with_role;
+        } else {
+            // Nếu không tìm thấy nhân viên phù hợp theo chuyên môn, lấy một nhân viên vệ sinh bất kỳ
+            $staff_with_role = db_get_row(
+                "SELECT e.*, u.role
+                FROM employees e
+                LEFT JOIN users u ON e.userID = u.userID
+                WHERE e.status = 'active'
+                  AND (e.department = 'Nhân viên vệ sinh' OR e.specialization LIKE '%vệ sinh%')
+                ORDER BY e.rating DESC, RAND() LIMIT 1"
+            );
+
+            if ($staff_with_role) {
+                // Phân công nhân viên
+                db_insert('booking_employees', [
+                    'booking_id' => $booking_id,
+                    'employee_id' => $staff_with_role['employeeID']
+                ]);
+
+                $selectedStaff = $staff_with_role;
+            }
+        }
+    } else {
+        $selectedStaff = $booking_staff;
+    }
 }
 
 // Xác định domain website để dùng cho đường dẫn hình ảnh trong email
@@ -193,7 +303,7 @@ $emailTemplate = '
         <div class="content">
             <p>Xin chào <strong>' . htmlspecialchars($bookingInfo['name']) . '</strong>,</p>
             <p>Chúng tôi xác nhận đã nhận được đặt lịch dịch vụ vệ sinh của bạn. Dưới đây là chi tiết đặt lịch:</p>
-            
+
             <div class="booking-details">
                 <h2>Chi Tiết Đặt Lịch</h2>
                 <table>
@@ -230,31 +340,36 @@ $emailTemplate = '
                         <td>Đã thanh toán</td>
                     </tr>
                 </table>
-            </div>
-            
+            </div>';
+
+// Thêm thông tin nhân viên nếu có - điều chỉnh để sử dụng tên trường từ bảng employees
+if ($selectedStaff) {
+    $emailTemplate .= '
             <div class="staff-info">
-                <img src="' . $baseUrl . '/' . $selectedStaff['avatar'] . '" alt="' . htmlspecialchars($selectedStaff['name']) . '" class="staff-avatar">
+                <img src="' . $baseUrl . '/' . $selectedStaff['avatar'] . '" alt="' . htmlspecialchars($selectedStaff['fullName']) . '" class="staff-avatar">
                 <div class="staff-details">
                     <h2>Nhân Viên Thực Hiện</h2>
-                    <p><strong>Họ tên:</strong> ' . htmlspecialchars($selectedStaff['name']) . '</p>
+                    <p><strong>Họ tên:</strong> ' . htmlspecialchars($selectedStaff['fullName']) . '</p>
                     <p><strong>Giới tính:</strong> ' . htmlspecialchars($selectedStaff['gender']) . '</p>
                     <p><strong>Đánh giá:</strong> <span class="rating">' . $selectedStaff['rating'] . '/5</span></p>
                     <p><strong>Kinh nghiệm:</strong> ' . htmlspecialchars($selectedStaff['experience']) . '</p>
                     <p><strong>Liên hệ:</strong> ' . htmlspecialchars($selectedStaff['phone']) . '</p>
                 </div>
-            </div>
-            
+            </div>';
+}
+
+$emailTemplate .= '
             <p>Nhân viên sẽ liên hệ với bạn qua số điện thoại trước khi đến để xác nhận lại. Vui lòng để ý điện thoại trong thời gian này.</p>
-            
-            <p>Nếu bạn cần thay đổi lịch hoặc có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua số điện thoại <strong>0326097576</strong> hoặc email <strong>support@thecleaner.com</strong>.</p>
-            
+
+            <p>Nếu bạn cần thay đổi lịch hoặc có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua số điện thoại <strong>' . get_config('company_phone', '0326097576') . '</strong> hoặc email <strong>' . get_config('company_email', 'support@thecleaner.com') . '</strong>.</p>
+
             <p>Cảm ơn bạn đã sử dụng dịch vụ của theCleaner!</p>
-            
+
             <a href="' . $baseUrl . '" class="button">Truy cập website</a>
         </div>
         <div class="footer">
             <p>&copy; ' . $currentYear . ' theCleaner. Tất cả các quyền được bảo lưu.</p>
-            <p>Địa chỉ: 123 Đường ABC, Quận XYZ, Thành phố Hà Nội, Việt Nam</p>
+            <p>Địa chỉ: ' . get_config('company_address', '123 Đường ABC, Quận XYZ, Thành phố Hà Nội, Việt Nam') . '</p>
         </div>
     </div>
 </body>
@@ -266,9 +381,11 @@ require_once 'send_email.php';
 // Gửi email thật
 $emailSent = false;
 try {
+    error_log("Bắt đầu gửi email...");
     $emailSent = sendBookingConfirmationEmail($bookingInfo, $emailTemplate, $bookingCode);
+    error_log("Kết quả gửi email: " . ($emailSent ? "Thành công" : "Thất bại"));
 } catch (Exception $e) {
-    error_log("Lỗi gửi email: " . $e->getMessage());
+    error_log("Lỗi gửi email (ngoại lệ chính): " . $e->getMessage());
 }
 
 // Lưu trạng thái gửi email vào session để hiển thị thông báo
@@ -286,7 +403,13 @@ $_SESSION['email_sent'] = $emailSent;
     <link rel="stylesheet" href="styles/confirmation-styles.css">
 </head>
 <body>
-    <!-- Thông báo gửi email -->
+    <?php if (isset($saveDbError)): ?>
+    <div class="db-error-notification">
+        <p><i class="fas fa-exclamation-circle"></i> Đã xảy ra lỗi khi lưu thông tin đặt lịch: <?php echo $saveDbError; ?></p>
+        <p>Vui lòng liên hệ với chúng tôi để được hỗ trợ.</p>
+    </div>
+    <?php endif; ?>
+
     <?php if (isset($_SESSION['email_sent'])): ?>
     <div class="email-status-notification" style="background: <?php echo $_SESSION['email_sent'] ? '#4caf50' : '#f44336'; ?>;">
         <?php if ($_SESSION['email_sent']): ?>
@@ -297,10 +420,8 @@ $_SESSION['email_sent'] = $emailSent;
     </div>
     <?php endif; ?>
 
-    <!-- Confetti Container for Animation -->
     <div class="confetti-container" id="confettiContainer"></div>
-    
-    <!-- Email Notification -->
+
     <div class="email-notification" id="emailNotification">
         <div class="email-header">
             <div class="email-icon">
@@ -319,27 +440,6 @@ $_SESSION['email_sent'] = $emailSent;
         </div>
     </div>
 
-    <!-- Header
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <a href="index.php" class="logo">the<span>Cleaner</span></a>
-                <div class="menu-btn" id="menuBtn">
-                    <i class="fas fa-bars"></i>
-                </div>
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="index.php">Trang Chủ</a></li>
-                    <li><a href="services.php">Dịch Vụ</a></li>
-                    <li><a href="about.php">Về Chúng Tôi</a></li>
-                    <li><a href="testimonials.php">Đánh Giá</a></li>
-                    <li><a href="contact.php">Liên Hệ</a></li>
-                    <li><a href="booking.php" class="btn btn-primary">Đặt Lịch</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header> -->
-
-    <!-- Page Banner -->
     <section class="page-banner">
         <div class="container">
             <h1>Xác Nhận Thanh Toán</h1>
@@ -347,11 +447,9 @@ $_SESSION['email_sent'] = $emailSent;
         </div>
     </section>
 
-    <!-- Confirmation Section -->
     <section class="confirmation-section">
         <div class="container">
             <div class="confirmation-container">
-                <!-- Success Message -->
                 <div class="confirmation-message">
                     <div class="success-icon">
                         <i class="fas fa-check"></i>
@@ -362,7 +460,6 @@ $_SESSION['email_sent'] = $emailSent;
                     <p>Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất để xác nhận lịch thực hiện dịch vụ.</p>
                 </div>
 
-                <!-- Confirmation Details -->
                 <div class="confirmation-details">
                     <h3>Chi Tiết Đặt Lịch</h3>
                     <div class="details-grid">
@@ -421,7 +518,6 @@ $_SESSION['email_sent'] = $emailSent;
                     </div>
                 </div>
 
-                <!-- Assigned Staff Section -->
                 <?php if ($selectedStaff): ?>
                 <div class="assigned-staff">
                     <div class="section-title">
@@ -430,13 +526,13 @@ $_SESSION['email_sent'] = $emailSent;
                     </div>
                     <div class="staff-profile" id="staffProfile">
                         <div class="staff-avatar">
-                            <img src="<?php echo $selectedStaff['avatar']; ?>" alt="<?php echo htmlspecialchars($selectedStaff['name']); ?>">
+                            <img src="<?php echo $selectedStaff['avatar']; ?>" alt="<?php echo htmlspecialchars($selectedStaff['fullName']); ?>">
                             <div class="staff-rating">
                                 <i class="fas fa-star"></i> <?php echo $selectedStaff['rating']; ?>
                             </div>
                         </div>
                         <div class="staff-details">
-                            <h3><?php echo htmlspecialchars($selectedStaff['name']); ?></h3>
+                            <h3><?php echo htmlspecialchars($selectedStaff['fullName']); ?></h3>
                             <div class="staff-info">
                                 <p><strong>Giới tính:</strong> <?php echo htmlspecialchars($selectedStaff['gender']); ?></p>
                                 <p><strong>Tuổi:</strong> <?php echo $selectedStaff['age']; ?></p>
@@ -452,7 +548,6 @@ $_SESSION['email_sent'] = $emailSent;
                 </div>
                 <?php endif; ?>
 
-                <!-- Next Steps -->
                 <div class="next-steps">
                     <h3>Các Bước Tiếp Theo</h3>
                     <ul>
@@ -495,7 +590,6 @@ $_SESSION['email_sent'] = $emailSent;
                     </ul>
                 </div>
 
-                <!-- Confirmation Actions -->
                 <div class="confirmation-actions">
                     <a href="index.php" class="btn btn-primary">Về Trang Chủ</a>
                     <a href="#" id="viewEmailBtn" class="btn btn-outline">Xem Email</a>
@@ -504,7 +598,6 @@ $_SESSION['email_sent'] = $emailSent;
         </div>
     </section>
 
-    <!-- Email Preview Modal -->
     <div id="emailModal">
         <div>
             <button id="closeEmailModal">&times;</button>
@@ -514,56 +607,6 @@ $_SESSION['email_sent'] = $emailSent;
             </div>
         </div>
     </div>
-
-    <!-- Footer
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-col">
-                    <h4>Về theCleaner</h4>
-                    <p>theCleaner là công ty chuyên cung cấp dịch vụ vệ sinh chuyên nghiệp, với đội ngũ nhân viên chuyên nghiệp và trang thiết bị hiện đại.</p>
-                    <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h4>Dịch Vụ</h4>
-                    <ul class="footer-links">
-                        <li><a href="services.php">Vệ sinh nhà ở</a></li>
-                        <li><a href="services.php">Vệ sinh văn phòng</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Liên Kết Nhanh</h4>
-                    <ul class="footer-links">
-                        <li><a href="index.php">Trang chủ</a></li>
-                        <li><a href="about.php">Về chúng tôi</a></li>
-                        <li><a href="services.php">Dịch vụ</a></li>
-                        <li><a href="testimonials.php">Đánh giá</a></li>
-                        <li><a href="contact.php">Liên hệ</a></li>
-                        <li><a href="booking.php">Đặt lịch</a></li>
-                        <li><a href="#">Chính sách bảo mật</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Bản Tin</h4>
-                    <p>Đăng ký nhận thông tin khuyến mãi và dịch vụ mới nhất từ chúng tôi.</p>
-                    <form method="post" action="process_newsletter.php">
-                        <div class="form-group">
-                            <input type="email" name="subscribe_email" class="form-control" placeholder="Email của bạn" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Đăng Ký</button>
-                    </form>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; <?php echo $currentYear; ?> theCleaner. Tất cả các quyền được bảo lưu.</p>
-            </div>
-        </div>
-    </footer> -->
 
     <script src="scripts/script.js"></script>
     <script>
@@ -575,7 +618,7 @@ $_SESSION['email_sent'] = $emailSent;
                     staffProfile.classList.add('visible');
                 }, 1000);
             }
-            
+
             // Hiển thị notification email đã gửi
             const emailNotification = document.getElementById('emailNotification');
             if (emailNotification) {
@@ -583,7 +626,7 @@ $_SESSION['email_sent'] = $emailSent;
                     emailNotification.classList.add('show');
                 }, 3000);
             }
-            
+
             // Đóng notification email
             const closeEmailNotification = document.getElementById('closeEmailNotification');
             if (closeEmailNotification && emailNotification) {
@@ -591,36 +634,36 @@ $_SESSION['email_sent'] = $emailSent;
                     emailNotification.classList.remove('show');
                 });
             }
-            
+
             // Hiển thị modal email preview
             const viewEmailBtn = document.getElementById('viewEmailBtn');
             const emailModal = document.getElementById('emailModal');
             const closeEmailModal = document.getElementById('closeEmailModal');
-            
+
             if (viewEmailBtn && emailModal) {
                 viewEmailBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     emailModal.style.display = 'block';
                 });
             }
-            
+
             if (closeEmailModal && emailModal) {
                 closeEmailModal.addEventListener('click', function() {
                     emailModal.style.display = 'none';
                 });
             }
-            
+
             // Đóng modal khi click ngoài nội dung
             window.addEventListener('click', function(e) {
                 if (emailModal && e.target === emailModal) {
                     emailModal.style.display = 'none';
                 }
             });
-            
+
             // Tạo hiệu ứng Confetti
             const confettiContainer = document.getElementById('confettiContainer');
             const colors = ['#f94144', '#f3722c', '#f8961e', '#f9c74f', '#90be6d', '#43aa8b', '#577590'];
-            
+
             function createConfetti() {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
@@ -631,21 +674,21 @@ $_SESSION['email_sent'] = $emailSent;
                 confetti.style.height = Math.random() * 10 + 5 + 'px';
                 confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
                 confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
-                
+
                 confettiContainer.appendChild(confetti);
-                
+
                 setTimeout(() => {
                     confetti.remove();
                 }, 5000);
             }
-            
+
             // Tạo hiệu ứng confetti khi trang tải xong
             if (confettiContainer) {
                 for (let i = 0; i < 100; i++) {
                     setTimeout(createConfetti, i * 100);
                 }
             }
-            
+
             // Xóa thông báo trạng thái email sau 5 giây
             const emailStatusNotification = document.querySelector('.email-status-notification');
             if (emailStatusNotification) {

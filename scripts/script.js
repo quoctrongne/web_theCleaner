@@ -153,19 +153,19 @@ function calculatePrice(service, area) {
 
     if (service === 'home') { // Vệ sinh nhà ở
         if (area < 50) {
-            basePrice = 500000;
+            basePrice = area * 20000;
         } else if (area < 100) {
-            basePrice = 800000;
+            basePrice = area * 16000;
         } else {
-            basePrice = 1000000 + (area - 100) * 8000;
+            basePrice = area * 14000;
         }
     } else if (service === 'office') { // Vệ sinh văn phòng
         if (area < 100) {
-            basePrice = area * 15000;
+            basePrice = area * 25000;
         } else if (area < 300) {
-            basePrice = area * 13000;
+            basePrice = area * 22000;
         } else {
-            basePrice = area * 11000;
+            basePrice = area * 20000;
         }
     }
 

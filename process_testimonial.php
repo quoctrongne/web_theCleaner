@@ -2,6 +2,12 @@
 /**
  * File này xử lý form gửi đánh giá từ khách hàng
  */
+// Import PHPMailer classes
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+// Kết nối đến database
+require_once 'database_connection.php';
 
 // Khởi tạo session nếu chưa có
 session_start();
@@ -21,8 +27,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
         $service = filter_var($_POST['service'], FILTER_SANITIZE_STRING);
-        $rating = filter_var($_POST['rating'], FILTER_VALIDATE_INT);
+        $rating = filter_var($_POST['rating'], FILTER_VALIDATE_FLOAT);
         $testimonial = filter_var($_POST['testimonial'], FILTER_SANITIZE_STRING);
+        
+        // Xác định vị trí
+        $location = "Khách hàng tại Việt Nam"; // Giá trị mặc định
+        
+        // Kiểm tra xem người dùng đã tồn tại chưa
+        $user = db_get_row("SELECT id FROM users WHERE email = :email", ['email' => $email]);
+        $user_id = null;
+        
+        if ($user) {
+            $user_id = $user['id'];
+        }
         
         // Xử lý tệp ảnh nếu có
         $photoPath = null;
@@ -35,31 +52,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             
             // Tạo tên file duy nhất
-            $fileExtension = pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION);
-            $uniqueName = uniqid() . '_' . time() . '.' . $fileExtension;
-            $targetFile = $targetDir . $uniqueName;
-            
-            // Danh sách các loại file ảnh được phép
-            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            $fileExtension = strtolower(pathinfo($_FILES["photo"]["name"], PATHINFO_EXTENSION));
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
             
             // Kiểm tra loại file
-            if (in_array($_FILES["photo"]["type"], $allowedTypes)) {
-                // Di chuyển file tạm thời đến thư mục đích
-                if (move_uploaded_file($_FILES["photo"]["tmp_name"], $targetFile)) {
-                    $photoPath = $targetFile;
-                }
+            if (!in_array($fileExtension, $allowedExtensions)) {
+                $_SESSION['testimonial_success'] = false;
+                $_SESSION['testimonial_message'] = "Chỉ chấp nhận file ảnh (jpg, jpeg, png, gif).";
+                header("Location: testimonials.php");
+                exit();
             }
+            $uniqueName = uniqid() . '_' . time() . '.' . $fileExtension;
+            $targetFile = $targetDir . $uniqueName;
         }
         
-        // Trong ứng dụng thực tế, bạn sẽ lưu đánh giá vào cơ sở dữ liệu
-        // Ví dụ: saveTestimonialToDatabase($name, $email, $service, $rating, $testimonial, $photoPath);
+        // Thêm đánh giá vào database
+        $testimonial_data = [
+            'user_id' => $user_id,
+            'name' => $name,
+            'email' => $email,
+            'service' => $service,
+            'rating' => $rating,
+            'testimonial' => $testimonial,
+            'photo_path' => $photoPath,
+            'location' => $location,
+            'status' => 'pending' // Mặc định là chờ phê duyệt
+        ];
         
-        // Có thể gửi email thông báo cho admin
-        // Ví dụ: sendTestimonialNotification($name, $email, $service, $rating, $testimonial);
+        $testimonial_id = db_insert('testimonials', $testimonial_data);
         
-        // Tạo thông báo thành công
-        $_SESSION['testimonial_success'] = true;
-        $_SESSION['testimonial_message'] = "Cảm ơn bạn đã chia sẻ đánh giá. Đánh giá của bạn sẽ được hiển thị sau khi xét duyệt.";
+        if ($testimonial_id) {
+            // Tạo thông báo thành công
+            $_SESSION['testimonial_success'] = true;
+            $_SESSION['testimonial_message'] = "Cảm ơn bạn đã chia sẻ đánh giá. Đánh giá của bạn sẽ được hiển thị sau khi xét duyệt.";
+            
+            // Có thể gửi email thông báo cho admin
+            // sendTestimonialNotification($name, $email, $service, $rating, $testimonial);
+        } else {
+            // Tạo thông báo lỗi
+            $_SESSION['testimonial_success'] = false;
+            $_SESSION['testimonial_message'] = "Có lỗi xảy ra khi lưu đánh giá. Vui lòng thử lại sau.";
+        }
     } else {
         // Tạo thông báo lỗi
         $_SESSION['testimonial_success'] = false;
@@ -76,54 +109,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 /**
- * Hàm lưu đánh giá vào cơ sở dữ liệu (giả định)
- */
-function saveTestimonialToDatabase($name, $email, $service, $rating, $testimonial, $photoPath = null) {
-    // Kết nối đến cơ sở dữ liệu
-    try {
-        $host = 'localhost';
-        $db = 'thecleaner';
-        $user = 'username';
-        $pass = 'password';
-        
-        $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ];
-        
-        $pdo = new PDO($dsn, $user, $pass, $options);
-        
-        // Thêm đánh giá mới vào cơ sở dữ liệu
-        $stmt = $pdo->prepare("
-            INSERT INTO testimonials (name, email, service, rating, testimonial, photo_path, status, created_at) 
-            VALUES (:name, :email, :service, :rating, :testimonial, :photo_path, 'pending', NOW())
-        ");
-        
-        $stmt->execute([
-            'name' => $name,
-            'email' => $email,
-            'service' => $service,
-            'rating' => $rating,
-            'testimonial' => $testimonial,
-            'photo_path' => $photoPath
-        ]);
-        
-        return true;
-    } catch (PDOException $e) {
-        // Xử lý lỗi cơ sở dữ liệu
-        error_log("Database Error: " . $e->getMessage());
-        return false;
-    }
-}
-
-/**
- * Hàm gửi thông báo đánh giá mới cho admin (giả định)
+ * Hàm gửi thông báo đánh giá mới cho admin (tùy chọn)
+ * Đây là hàm mẫu để triển khai sau này
  */
 function sendTestimonialNotification($name, $email, $service, $rating, $testimonial) {
-    $to = "admin@thecleaner.com";
-    $subject = "Đánh giá mới từ khách hàng - theCleaner";
+    // Import PHPMailer
+    require 'vendor/autoload.php';
+    // Lấy email admin từ database configuration
+    $admin_email = get_config('admin_email', 'admin@thecleaner.com');
     
     $serviceLabels = [
         'home' => 'Vệ sinh nhà ở',
@@ -132,30 +125,51 @@ function sendTestimonialNotification($name, $email, $service, $rating, $testimon
     
     $serviceLabel = isset($serviceLabels[$service]) ? $serviceLabels[$service] : $service;
     
-    $message = "
-    <html>
-    <head>
-        <title>Đánh giá mới từ khách hàng</title>
-    </head>
-    <body>
-        <h2>Đánh giá mới đã được gửi</h2>
-        <p><strong>Người gửi:</strong> {$name}</p>
-        <p><strong>Email:</strong> {$email}</p>
-        <p><strong>Dịch vụ đã sử dụng:</strong> {$serviceLabel}</p>
-        <p><strong>Đánh giá:</strong> {$rating}/5</p>
-        <p><strong>Nội dung đánh giá:</strong></p>
-        <p>{$testimonial}</p>
-        <p><a href='https://thecleaner.com/admin/testimonials.php'>Đăng nhập vào trang quản trị</a> để xem và phê duyệt đánh giá này.</p>
-    </body>
-    </html>
-    ";
+    $mail = new PHPMailer(true);
     
-    // Các headers cần thiết để gửi email HTML
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= "From: theCleaner Website <no-reply@thecleaner.com>" . "\r\n";
-    
-    // Gửi email
-    return mail($to, $subject, $message, $headers);
+    try {
+        // Cấu hình SMTP
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.gmail.com';
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'your_email@gmail.com';
+        $mail->Password   = 'your_app_password';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+        $mail->CharSet    = 'UTF-8';
+        
+        // Thông tin người gửi và người nhận
+        $mail->setFrom('your_email@gmail.com', 'theCleaner Website');
+        $mail->addAddress($admin_email);
+        
+        // Nội dung email
+        $mail->isHTML(true);
+        $mail->Subject = "Đánh giá mới từ khách hàng - theCleaner";
+        
+        $mail->Body = "
+        <html>
+        <head>
+            <title>Đánh giá mới từ khách hàng</title>
+        </head>
+        <body>
+            <h2>Đánh giá mới đã được gửi</h2>
+            <p><strong>Người gửi:</strong> {$name}</p>
+            <p><strong>Email:</strong> {$email}</p>
+            <p><strong>Dịch vụ đã sử dụng:</strong> {$serviceLabel}</p>
+            <p><strong>Đánh giá:</strong> {$rating}/5</p>
+            <p><strong>Nội dung đánh giá:</strong></p>
+            <p>{$testimonial}</p>
+            <p><a href='https://thecleaner.com/admin/testimonials.php'>Đăng nhập vào trang quản trị</a> để xem và phê duyệt đánh giá này.</p>
+        </body>
+        </html>
+        ";
+        
+        $mail->AltBody = "Đánh giá mới từ {$name} ({$email}). Dịch vụ: {$serviceLabel}. Đánh giá: {$rating}/5. Nội dung: {$testimonial}";
+        
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        error_log("Không thể gửi email thông báo đánh giá: {$mail->ErrorInfo}");
+        return false;
+    }
 }
-?>

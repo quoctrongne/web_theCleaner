@@ -1,57 +1,43 @@
 <?php
+// Kết nối đến database
+require_once 'config.php';
+
 // Thiết lập các thông tin cơ bản cho trang
 $pageTitle = "Liên Hệ - theCleaner";
 $currentPage = "contact";
 
-// Thông tin liên hệ
+// Thông tin liên hệ từ mảng cấu hình
 $contactInfo = [
     [
         "icon" => "fas fa-map-marker-alt",
         "title" => "Địa Chỉ",
-        "content" => ["123 Đường ABC, Quận XYZ", "Thành phố Hà Nội, Việt Nam"]
+        "content" => [get_config('company_address', '123 Đường ABC, Quận XYZ, Thành phố Hà Nội, Việt Nam')]
     ],
     [
         "icon" => "fas fa-phone-alt",
         "title" => "Điện Thoại",
-        "content" => ["+84 123 456 789", "+84 987 654 321"]
+        "content" => [get_config('company_phone', '+84 123 456 789')]
     ],
     [
         "icon" => "fas fa-envelope",
         "title" => "Email",
-        "content" => ["info@thecleaner.com", "support@thecleaner.com"]
+        "content" => [get_config('company_email', 'info@thecleaner.com'), "support@thecleaner.com"]
     ],
     [
         "icon" => "fas fa-clock",
         "title" => "Giờ Làm Việc",
-        "content" => ["Thứ Hai - Thứ Bảy: 8:00 - 18:00", "Chủ Nhật: Nghỉ"]
+        "content" => [get_config('company_working_hours', 'Thứ Hai - Thứ Bảy: 8:00 - 18:00, Chủ Nhật: Nghỉ')]
     ]
 ];
 
-// Danh sách dịch vụ cho form liên hệ
+// Lấy các dịch vụ từ mảng thay vì database
 $serviceOptions = [
     ["value" => "home", "label" => "Vệ sinh nhà ở"],
     ["value" => "office", "label" => "Vệ sinh văn phòng"]
 ];
 
-// Danh sách câu hỏi thường gặp
-$faqs = [
-    [
-        "question" => "Tôi có thể đặt lịch dịch vụ như thế nào?",
-        "answer" => "Bạn có thể đặt lịch dịch vụ thông qua trang đặt lịch trên website, gọi điện thoại hoặc gửi email cho chúng tôi. Chúng tôi sẽ liên hệ xác nhận trong vòng 24 giờ sau khi nhận được yêu cầu."
-    ],
-    [
-        "question" => "Thời gian thực hiện dịch vụ là bao lâu?",
-        "answer" => "Thời gian thực hiện dịch vụ phụ thuộc vào loại dịch vụ và diện tích cần vệ sinh. Thông thường, dịch vụ vệ sinh nhà ở có diện tích trung bình sẽ mất khoảng 3-5 giờ, vệ sinh văn phòng có thể mất từ 2-8 giờ tùy quy mô."
-    ],
-    [
-        "question" => "Tôi có thể hủy hoặc thay đổi lịch đã đặt không?",
-        "answer" => "Có, bạn có thể hủy hoặc thay đổi lịch đã đặt ít nhất 24 giờ trước thời gian đã hẹn. Vui lòng liên hệ với chúng tôi qua điện thoại hoặc email để thực hiện việc thay đổi."
-    ],
-    [
-        "question" => "Các phương thức thanh toán được chấp nhận?",
-        "answer" => "Chúng tôi chấp nhận nhiều phương thức thanh toán khác nhau bao gồm tiền mặt, chuyển khoản ngân hàng, thẻ tín dụng/ghi nợ và ví điện tử (MoMo, ZaloPay, VNPay)."
-    ]
-];
+// Lấy FAQs từ mảng thay vì database
+$faqs = db_get_rows("SELECT question, answer FROM faqs WHERE is_active = 1 ORDER BY display_order, id LIMIT 4");
 
 // Danh sách chi nhánh
 $branches = [
@@ -91,11 +77,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['contact_submit'])) {
         !empty($_POST['service']) && 
         !empty($_POST['message'])
     ) {
-        // Form đã được gửi thành công
-        $formSubmitted = true;
+        // Thêm vào database
+        $contact_data = [
+            'name' => $_POST['name'],
+            'email' => $_POST['email'],
+            'phone' => $_POST['phone'],
+            'service' => $_POST['service'],
+            'message' => $_POST['message'],
+            'status' => 'new'
+        ];
         
-        // Trong một ứng dụng thực tế, bạn sẽ xử lý dữ liệu form ở đây
-        // Ví dụ: gửi email, lưu vào cơ sở dữ liệu, v.v.
+        $contact_id = db_insert('contacts', $contact_data);
+        
+        if ($contact_id) {
+            // Form đã được gửi thành công
+            $formSubmitted = true;
+            
+            // Có thể gửi email thông báo cho admin
+            // sendContactNotification($contact_data);
+        } else {
+            // Lỗi khi lưu vào database
+            $formError = true;
+        }
     } else {
         // Form có lỗi
         $formError = true;
@@ -124,7 +127,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['contact_submit'])) {
                 <ul class="nav-menu" id="navMenu">
                 <li><a href="index.php">Trang Chủ</a></li>
                 <li><a href="services.php">Dịch Vụ</a></li>
-                <li><a href="about.php">Về Chúng Tôi</a></li>  <!-- Đã sửa -->
+                <li><a href="about.php">Về Chúng Tôi</a></li>
                 <li><a href="testimonials.php">Đánh Giá</a></li>
                 <li><a href="contact.php">Liên Hệ</a></li>
                 <li><a href="booking.php" class="btn btn-primary">Đặt Lịch</a></li>
@@ -251,88 +254,72 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['contact_submit'])) {
         </div>
     </section>
 
-    <!-- Branch Locations -->
-    <section class="branches">
-        <div class="container">
-            <div class="section-title">
-                <h2>Chi Nhánh Của Chúng Tôi</h2>
-                <p>Hệ thống chi nhánh trên toàn quốc</p>
-            </div>
-            <div class="branches-container">
-                <?php foreach ($branches as $branch): ?>
-                <div class="branch">
-                    <h3><?php echo $branch['name']; ?></h3>
-                    <p><i class="fas fa-map-marker-alt"></i> <?php echo $branch['address']; ?></p>
-                    <p><i class="fas fa-phone"></i> <?php echo $branch['phone']; ?></p>
-                    <p><i class="fas fa-envelope"></i> <?php echo $branch['email']; ?></p>
-                </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
+    
 
     <!-- CTA Section -->
     <section class="cta">
         <div class="container">
             <h2>Hãy Liên Hệ Ngay Hôm Nay</h2>
             <p>Đội ngũ chăm sóc khách hàng của chúng tôi luôn sẵn sàng hỗ trợ và tư vấn cho bạn về dịch vụ vệ sinh phù hợp nhất.</p>
-            <a href="tel:+84123456789" class="btn"><i class="fas fa-phone"></i> Gọi Ngay</a>
+            <a href="tel:<?php echo get_config('company_phone', '+84123456789'); ?>" class="btn"><i class="fas fa-phone"></i> Gọi Ngay</a>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-col">
-                    <h4>Về theCleaner</h4>
-                    <p>theCleaner là công ty chuyên cung cấp dịch vụ vệ sinh chuyên nghiệp, với đội ngũ nhân viên chuyên nghiệp và trang thiết bị hiện đại.</p>
-                    <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h4>Dịch Vụ</h4>
-                    <ul class="footer-links">
-                        <li><a href="services.php">Vệ sinh nhà ở</a></li>
-                        <li><a href="services.php">Vệ sinh văn phòng</a></li>
-                        <li><a href="services.php">Vệ sinh nội thất</a></li>
-                        <li><a href="services.php">Vệ sinh kính</a></li>
-                        <li><a href="services.php">Vệ sinh sau xây dựng</a></li>
-                        <li><a href="services.php">Khử trùng & diệt khuẩn</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Liên Kết Nhanh</h4>
-                    <ul class="footer-links">
-                        <li><a href="index.php">Trang chủ</a></li>
-                        <li><a href="about.php">Về chúng tôi</a></li>
-                        <li><a href="services.php">Dịch vụ</a></li>
-                        <li><a href="testimonials.php">Đánh giá</a></li>
-                        <li><a href="contact.php">Liên hệ</a></li>
-                        <li><a href="booking.php">Đặt lịch</a></li>
-                        <li><a href="#">Chính sách bảo mật</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Bản Tin</h4>
-                    <p>Đăng ký nhận thông tin khuyến mãi và dịch vụ mới nhất từ chúng tôi.</p>
-                    <form method="post" action="process_newsletter.php">
-                        <div class="form-group">
-                            <input type="email" name="subscribe_email" class="form-control" placeholder="Email của bạn" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Đăng Ký</button>
-                    </form>
+    <div class="container">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>Về theCleaner</h4>
+                <p>theCleaner là công ty chuyên cung cấp dịch vụ vệ sinh chuyên nghiệp, với đội ngũ nhân viên chuyên nghiệp và trang thiết bị hiện đại.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; <?php echo $currentYear; ?> theCleaner. Tất cả các quyền được bảo lưu.</p>
+            <div class="footer-col">
+                <h4>Dịch Vụ</h4>
+                <ul class="footer-links">
+                    <li><a href="services.php">Vệ sinh nhà ở</a></li>
+                    <li><a href="services.php">Vệ sinh văn phòng</a></li>
+                    <li><a href="services.php">Vệ sinh kính</a></li>
+                    <li><a href="services.php">Vệ sinh sau xây dựng</a></li>
+                    <li><a href="services.php">Khử trùng & diệt khuẩn</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Liên Kết Nhanh</h4>
+                <ul class="footer-links">
+                    <li><a href="index.php">Trang chủ</a></li>
+                    <li><a href="about.php">Về chúng tôi</a></li>
+                    <li><a href="services.php">Dịch vụ</a></li>
+                    <li><a href="testimonials.php">Đánh giá</a></li>
+                    <li><a href="contact.php">Liên hệ</a></li>
+                    <li><a href="booking.php">Đặt lịch</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Bản Tin</h4>
+                <p>Đăng ký nhận thông tin khuyến mãi và dịch vụ mới nhất từ chúng tôi.</p>
+                <form method="post" action="process_newsletter.php">
+                    <div class="form-group">
+                        <input type="email" name="subscribe_email" class="form-control" placeholder="Email của bạn" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đăng Ký</button>
+                    
+                    <!-- Thêm nút đăng nhập -->
+                    <a href="quantri/login.php" class="btn btn-primary mt-2">Đăng Nhập</a> <!-- Nút đăng nhập -->
+                </form>
             </div>
         </div>
-    </footer>
+        <div class="footer-bottom">
+            <p>&copy; <?php echo $currentYear; ?> theCleaner. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </div>
+</footer>
 
     <script src="scripts/script.js"></script>
     <script>

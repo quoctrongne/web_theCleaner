@@ -194,57 +194,61 @@ $currentYear = date("Y");
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-col">
-                    <h4>Về theCleaner</h4>
-                    <p>theCleaner là công ty chuyên cung cấp dịch vụ vệ sinh chuyên nghiệp, với đội ngũ nhân viên chuyên nghiệp và trang thiết bị hiện đại.</p>
-                    <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
+    <div class="container">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>Về theCleaner</h4>
+                <p>theCleaner là công ty chuyên cung cấp dịch vụ vệ sinh chuyên nghiệp, với đội ngũ nhân viên chuyên nghiệp và trang thiết bị hiện đại.</p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
+                <!-- Nút Đăng Nhập thêm vào dưới phần Về theCleaner -->
                 <div class="footer-col">
-                    <h4>Dịch Vụ</h4>
-                    <ul class="footer-links">
-                        <li><a href="services.php">Vệ sinh nhà ở</a></li>
-                        <li><a href="services.php">Vệ sinh văn phòng</a></li>
-                        <li><a href="services.php">Vệ sinh kính</a></li>
-                        <li><a href="services.php">Vệ sinh sau xây dựng</a></li>
-                        <li><a href="services.php">Khử trùng & diệt khuẩn</a></li>
-                    </ul>
+                    <a href="quantri/login.php">Administrator</a> 
                 </div>
-                <div class="footer-col">
-                    <h4>Liên Kết Nhanh</h4>
-                    <ul class="footer-links">
-                        <li><a href="index.php">Trang chủ</a></li>
-                        <li><a href="about.php">Về chúng tôi</a></li>
-                        <li><a href="services.php">Dịch vụ</a></li>
-                        <li><a href="testimonials.php">Đánh giá</a></li>
-                        <li><a href="contact.php">Liên hệ</a></li>
-                        <li><a href="booking.php">Đặt lịch</a></li>
-                        <li><a href="#">Chính sách bảo mật</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Bản Tin</h4>
-                    <p>Đăng ký nhận thông tin khuyến mãi và dịch vụ mới nhất từ chúng tôi.</p>
-                    <form method="post" action="process_newsletter.php">
-                        <div class="form-group">
-                            <input type="email" name="subscribe_email" class="form-control" placeholder="Email của bạn" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Đăng Ký</button>
-                    </form>
-                </div>
+
             </div>
-            <div class="footer-bottom">
-                <p>&copy; <?php echo $currentYear; ?> theCleaner. Tất cả các quyền được bảo lưu.</p>
+            <div class="footer-col">
+                <h4>Dịch Vụ</h4>
+                <ul class="footer-links">
+                    <li><a href="services.php">Vệ sinh nhà ở</a></li>
+                    <li><a href="services.php">Vệ sinh văn phòng</a></li>
+                    <li><a href="services.php">Vệ sinh kính</a></li>
+                    <li><a href="services.php">Vệ sinh sau xây dựng</a></li>
+                    <li><a href="services.php">Khử trùng & diệt khuẩn</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Liên Kết Nhanh</h4>
+                <ul class="footer-links">
+                    <li><a href="index.php">Trang chủ</a></li>
+                    <li><a href="about.php">Về chúng tôi</a></li>
+                    <li><a href="services.php">Dịch vụ</a></li>
+                    <li><a href="testimonials.php">Đánh giá</a></li>
+                    <li><a href="contact.php">Liên hệ</a></li>
+                    <li><a href="booking.php">Đặt lịch</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Bản Tin</h4>
+                <p>Đăng ký nhận thông tin khuyến mãi và dịch vụ mới nhất từ chúng tôi.</p>
+                <form method="post" action="process_newsletter.php">
+                    <div class="form-group">
+                        <input type="email" name="subscribe_email" class="form-control" placeholder="Email của bạn" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đăng Ký</button>
+                </form>
             </div>
         </div>
-    </footer>
-
+        <div class="footer-bottom">
+            <p>&copy; <?php echo $currentYear; ?> theCleaner. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </div>
+</footer>
     <script src="scripts/script.js"></script>
 </body>
 </html>

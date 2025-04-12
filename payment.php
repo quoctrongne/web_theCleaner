@@ -4,40 +4,40 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Kết nối đến cấu hình
+require_once 'config.php';
+
 // Khởi tạo session
 session_start();
-
-// Kiểm tra xem thông tin đặt lịch có trong session không
-if (!isset($_SESSION['booking_info']) || !isset($_SESSION['estimated_price'])) {
-    // Debug - Hiển thị thông tin session
-    // echo "<pre>Session: "; print_r($_SESSION); echo "</pre>"; exit;
-    
-    // Chuyển hướng về trang đặt lịch nếu không có thông tin
+// Kiểm tra phiên đăng nhập nếu cần
+if (!isset($_SESSION['booking_info'])) {
     header("Location: booking.php");
-    exit;
+    exit();
 }
 
 // Lấy thông tin đặt lịch từ session
 $bookingInfo = $_SESSION['booking_info'];
 $estimatedPrice = $_SESSION['estimated_price'];
 
-// Tạo mã giao dịch
-$transactionId = isset($bookingInfo['bookingId']) ? $bookingInfo['bookingId'] : 'TR'.time();
+// Tạo mã giao dịch duy nhất
+$transactionId = 'TR' . time() . mt_rand(1000, 9999); // Mã giao dịch duy nhất
 
-// Thông tin người nhận thanh toán - CẬP NHẬT THÔNG TIN CỦA BẠN Ở ĐÂY
+// Thông tin người nhận thanh toán - Lấy từ cấu hình
 $merchantInfo = [
-    "name" => "theCleaner", // Thay bằng tên của bạn
-    "phone" => "0326097576", // Thay bằng số điện thoại MoMo của bạn
-    "accountName" => "CÔNG TY TNHH DỊCH VỤ VỆ SINH THE CLEANER" // Thay bằng tên tài khoản của bạn
+    "name" => get_config('company_name', 'theCleaner'),
+    "phone" => get_config('momo_phone', '0326097576'),
+    "accountName" => get_config('momo_account_name', 'CÔNG TY TNHH DỊCH VỤ VỆ SINH THE CLEANER')
 ];
 
-// Lấy thông tin dịch vụ
-$serviceNames = [
-    'home' => 'Vệ sinh nhà ở',
-    'office' => 'Vệ sinh văn phòng'
-];
-
-$serviceName = isset($serviceNames[$bookingInfo['service']]) ? $serviceNames[$bookingInfo['service']] : $bookingInfo['service'];
+// Lấy thông tin dịch vụ từ cấu hình thay vì database
+$serviceName = '';
+if ($bookingInfo['service'] == 'home') {
+    $serviceName = 'Vệ sinh nhà ở';
+} elseif ($bookingInfo['service'] == 'office') {
+    $serviceName = 'Vệ sinh văn phòng';
+} else {
+    $serviceName = $bookingInfo['service'];
+}
 
 // Lấy năm hiện tại cho footer
 $currentYear = date("Y");
@@ -51,20 +51,6 @@ $formattedPrice = number_format($estimatedPrice, 0, ',', '.') . ' đ';
 // Mô tả thanh toán
 $paymentDescription = "TT DV " . strtoupper($bookingInfo['service']) . " " . $bookingInfo['bookingId'];
 
-// Tạo dữ liệu QR MoMo
-// Trong thực tế, bạn sẽ cần tích hợp với API chính thức của MoMo
-// Đây là một mô phỏng đơn giản
-$qrData = [
-    "merchantName" => $merchantInfo['name'],
-    "merchantPhone" => $merchantInfo['phone'],
-    "amount" => $estimatedPrice,
-    "description" => $paymentDescription,
-    "transactionId" => $transactionId
-];
-
-// Chuyển thành chuỗi JSON để sử dụng với API
-$qrDataJson = json_encode($qrData);
-
 // Lưu thông tin giao dịch vào session để thanh toán thành công
 $_SESSION['transaction_info'] = [
     'transaction_id' => $transactionId,
@@ -76,12 +62,17 @@ $_SESSION['transaction_info'] = [
 // Nếu có POST request xác nhận đã thanh toán
 $paymentSuccess = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
-    // Trong thực tế, bạn sẽ kiểm tra trạng thái thanh toán với API của MoMo
-    // Tại đây chỉ mô phỏng xác nhận thanh toán thành công
+    // Cập nhật trạng thái thanh toán
     $_SESSION['transaction_info']['status'] = 'completed';
     $paymentSuccess = true;
-    
-    // Không chuyển hướng ngay để hiển thị thông báo thành công
+
+    // Ghi log để debug
+    error_log("Đã cập nhật trạng thái thanh toán thành 'completed'");
+    error_log("Transaction info sau cập nhật: " . print_r($_SESSION['transaction_info'], true));
+
+    // Chuyển hướng đến trang xác nhận
+     header("Location: payment_confirmation.php");
+     exit();
 }
 ?>
 <!DOCTYPE html>
@@ -94,11 +85,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
     <link rel="stylesheet" href="styles/common.css">
     <link rel="stylesheet" href="styles/payment.css">
     <link rel="stylesheet" href="styles/payment_styles.css">
-    <!-- CSS cho thông báo thanh toán thành công -->
     <link rel="stylesheet" href="styles/payment_success.css">
+    <style>
+      .loading-spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(255, 255, 255, 0.7);
+        border-top: 2px solid rgba(255, 255, 255, 0);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 5px;
+        vertical-align: middle;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="container">
             <nav class="navbar">
@@ -118,7 +124,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
         </div>
     </header>
 
-    <!-- Page Banner -->
     <section class="page-banner">
         <div class="container">
             <h1>Thanh Toán</h1>
@@ -126,11 +131,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
         </div>
     </section>
 
-    <!-- Payment Section -->
     <section class="payment-section">
         <div class="container">
             <div class="payment-container">
-                <!-- Booking Summary -->
                 <div class="booking-summary">
                     <h2>Thông Tin Đặt Lịch</h2>
                     <div class="summary-details">
@@ -171,7 +174,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
                     </div>
                 </div>
                 
-                <!-- Payment Methods -->
                 <div class="payment-methods">
                     <h2>Phương Thức Thanh Toán</h2>
                     <div class="momo-container">
@@ -187,8 +189,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
                         
                         <div class="qr-container">
                             <div class="qr-code" id="qrCodeBox">
-                                <!-- Sử dụng QR generator của momo_qr_generator.php -->
-                                <img src="momo_qr_generator.php?phone=<?php echo urlencode($merchantInfo['phone']); ?>&amount=<?php echo urlencode($estimatedPrice); ?>&description=<?php echo urlencode($paymentDescription); ?>&name=<?php echo urlencode($merchantInfo['name']); ?>" alt="MoMo QR Code">
+                                <img src="momo_qr_generator.php?phone=<?php echo urlencode($merchantInfo['phone']); ?>&amount=<?php echo urlencode($estimatedPrice); ?>&description=<?php echo urlencode($paymentDescription); ?>&name=<?php echo urlencode($merchantInfo['name']); ?>&transaction_id=<?php echo urlencode($transactionId); ?>" alt="MoMo QR Code">
                                 <p class="qr-note">Quét mã bằng ứng dụng MoMo</p>
                             </div>
                             <div class="qr-instructions">
@@ -216,7 +217,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
                         <a href="booking.php" class="btn btn-outline">Quay Lại</a>
                         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id="paymentForm">
                             <input type="hidden" name="confirm_payment" value="1">
-                            <button type="button" id="confirmPaymentBtn" class="btn btn-primary">
+                            <button type="submit" id="confirmPaymentBtn" class="btn btn-primary">
                                 Xác Nhận Đã Thanh Toán
                                 <span class="loading-spinner" id="paymentSpinner"></span>
                             </button>
@@ -227,7 +228,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
         </div>
     </section>
 
-    <!-- Overlay thông báo thanh toán thành công -->
     <div class="payment-success-overlay" id="paymentSuccessOverlay" style="display: none;">
         <div class="payment-success-message">
             <div class="success-icon">
@@ -239,62 +239,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['confirm_payment'])) {
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-container">
-                <div class="footer-col">
-                    <h4>Về theCleaner</h4>
-                    <p>theCleaner là công ty chuyên cung cấp dịch vụ vệ sinh chuyên nghiệp, với đội ngũ nhân viên chuyên nghiệp và trang thiết bị hiện đại.</p>
-                    <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-                <div class="footer-col">
-                    <h4>Dịch Vụ</h4>
-                    <ul class="footer-links">
-                        <li><a href="services.php">Vệ sinh nhà ở</a></li>
-                        <li><a href="services.php">Vệ sinh văn phòng</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Liên Kết Nhanh</h4>
-                    <ul class="footer-links">
-                        <li><a href="index.php">Trang chủ</a></li>
-                        <li><a href="about.php">Về chúng tôi</a></li>
-                        <li><a href="services.php">Dịch vụ</a></li>
-                        <li><a href="testimonials.php">Đánh giá</a></li>
-                        <li><a href="contact.php">Liên hệ</a></li>
-                        <li><a href="booking.php">Đặt lịch</a></li>
-                        <li><a href="#">Chính sách bảo mật</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Bản Tin</h4>
-                    <p>Đăng ký nhận thông tin khuyến mãi và dịch vụ mới nhất từ chúng tôi.</p>
-                    <form method="post" action="process_newsletter.php">
-                        <div class="form-group">
-                            <input type="email" name="subscribe_email" class="form-control" placeholder="Email của bạn" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Đăng Ký</button>
-                    </form>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; <?php echo $currentYear; ?> theCleaner. Tất cả các quyền được bảo lưu.</p>
-            </div>
-        </div>
-    </footer>
-
     <script src="scripts/script.js"></script>
-    <!-- JavaScript xử lý thanh toán thành công -->
-    <script src="scripts/payment_success.js"></script>
     <script>
-    // Biến PHP được truyền vào JavaScript
-    var paymentSuccess = <?php echo $paymentSuccess ? 'true' : 'false'; ?>;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Thêm hiệu ứng khi nhấn nút thanh toán
+        document.getElementById('confirmPaymentBtn').addEventListener('click', function() {
+            document.getElementById('paymentSpinner').style.display = 'inline-block';
+            document.getElementById('confirmPaymentBtn').disabled = true; // Disable button
+            document.getElementById('paymentForm').submit(); // kích hoạt submit form
+        });
+        
+        // Nếu form được submit thành công, hiển thị overlay
+        if (<?php echo $paymentSuccess ? 'true' : 'false'; ?>) {
+            document.getElementById('paymentSuccessOverlay').style.display = 'flex';
+            setTimeout(function() {
+                window.location.href = 'payment_confirmation.php';
+            }, 3000);
+        }
+    });
     </script>
 </body>
 </html>
