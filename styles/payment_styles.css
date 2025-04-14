@@ -1,0 +1,98 @@
+/* Style cho overlay thông báo thanh toán thành công */
+.payment-success-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.payment-success-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.payment-success-message {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+    transform: translateY(20px);
+    transition: transform 0.5s;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.payment-success-overlay.active .payment-success-message {
+    transform: translateY(0);
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #e8f5e9;
+    color: #4caf50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 20px;
+}
+
+.payment-success-message h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.payment-success-message p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+    display: none;
+    vertical-align: middle;
+    margin-left: 5px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Style để highlight mô phỏng việc kiểm tra thanh toán */
+#qrCodeBox {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+#qrCodeBox.checking {
+    border: 2px solid #ffc107;
+    border-radius: 5px;
+}
+
+#qrCodeBox.success {
+    border: 2px solid #4caf50;
+    border-radius: 5px;
+}
+
+/* Style cho nút xác nhận thanh toán khi đang xử lý */
+.btn-processing {
+    position: relative;
+    background-color: #ddd !important;
+    cursor: not-allowed !important;
+}

@@ -1,0 +1,15 @@
+# Turn on the rewrite engine
+RewriteEngine On
+
+# Set the base directory - thay đổi 'thecleaner' thành thư mục thực tế của bạn
+RewriteBase /thecleaner/
+
+# Chuyển hướng từ .html sang .php (301 Permanent redirect)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)\.html$ $1.php [L,R=301]
+
+# Cho phép truy cập trực tiếp các file .php mà không cần đuôi file 
+# (không bắt buộc, nhưng hữu ích)
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^([^/]+)/?$ $1.php [L]

@@ -1,0 +1,532 @@
+/* CSS cho trang thanh toán */
+
+/* Payment Section */
+.payment-section {
+    padding: 100px 0;
+}
+
+.payment-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+/* Booking Summary */
+.booking-summary {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.booking-summary h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.booking-summary h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+.summary-details {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 15px;
+}
+
+.summary-item {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 20px;
+}
+
+.summary-item .label {
+    font-weight: 600;
+    color: #555;
+}
+
+.summary-item.total {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.summary-item.total .value {
+    color: var(--primary-color);
+}
+
+/* Payment Methods */
+.payment-methods {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.payment-methods h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.payment-methods h2:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+/* MoMo Container */
+.momo-container {
+    margin-bottom: 30px;
+}
+
+.momo-info {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    background-color: rgba(0,168,255,0.05);
+    margin-bottom: 20px;
+}
+
+.momo-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.momo-details h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: var(--dark-color);
+}
+
+.momo-details p {
+    font-size: 14px;
+    color: #777;
+}
+
+/* QR Code */
+.qr-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.qr-code {
+    flex: 0 0 250px;
+    text-align: center;
+}
+
+.qr-code img {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.qr-note {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.qr-instructions {
+    flex: 1;
+}
+
+.qr-instructions h4 {
+    margin-bottom: 15px;
+    color: var(--dark-color);
+}
+
+.qr-instructions ol {
+    padding-left: 20px;
+    margin-bottom: 20px;
+}
+
+.qr-instructions li {
+    margin-bottom: 8px;
+}
+
+.momo-payment-info {
+    background-color: #e8f4f8;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.momo-payment-info p {
+    margin-bottom: 8px;
+}
+
+.momo-payment-info p:last-child {
+    margin-bottom: 0;
+}
+
+/* Payment Actions */
+.payment-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.payment-actions .btn {
+    min-width: 150px;
+}
+
+/* Confirmation Section */
+.confirmation-section {
+    padding: 100px 0;
+}
+
+.confirmation-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Success Message */
+.confirmation-message {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #e8f5e9;
+    color: #4caf50;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 20px;
+}
+
+.confirmation-message h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+}
+
+.confirmation-message p {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Assigned Staff Section */
+.assigned-staff {
+    padding: 40px 0;
+    background-color: #f8f9fa;
+}
+
+.staff-profile {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.staff-avatar {
+    position: relative;
+    flex: 0 0 250px;
+}
+
+.staff-avatar img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.staff-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.staff-rating i {
+    margin-right: 5px;
+}
+
+.staff-details {
+    flex: 1;
+    padding: 30px;
+}
+
+.staff-details h3 {
+    font-size: 24px;
+    color: var(--dark-color);
+    margin-bottom: 20px;
+}
+
+.staff-info {
+    margin-bottom: 20px;
+}
+
+.staff-info p {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.staff-info p strong {
+    color: var(--dark-color);
+    width: 150px;
+    display: inline-block;
+}
+
+.staff-note {
+    background-color: #e8f4f8;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.staff-note p {
+    color: #555;
+    margin: 0;
+}
+
+.staff-note i {
+    color: var(--primary-color);
+    margin-right: 10px;
+}
+
+/* Confirmation Details */
+.confirmation-details {
+    margin-bottom: 40px;
+}
+
+.confirmation-details h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.confirmation-details h3:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.details-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.details-item strong {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+.details-item span {
+    font-size: 16px;
+    color: var(--dark-color);
+}
+
+.details-item.total {
+    grid-column: span 2;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.details-item.total strong {
+    font-size: 16px;
+    color: var(--dark-color);
+}
+
+.details-item.total span {
+    font-size: 20px;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.payment-status-completed {
+    color: #4caf50;
+}
+
+/* Next Steps */
+.next-steps {
+    margin-bottom: 40px;
+}
+
+.next-steps h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--dark-color);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.next-steps h3:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background-color: var(--primary-color);
+}
+
+.next-steps ul {
+    list-style: none;
+    padding: 0;
+}
+
+.next-steps li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.step-icon {
+    width: 40px;
+    height: 40px;
+    background: #f1f2f6;
+    color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.step-content {
+    flex: 1;
+}
+
+.step-content h4 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: var(--dark-color);
+}
+
+.step-content p {
+    color: #555;
+}
+
+/* Confirmation Actions */
+.confirmation-actions {
+    text-align: center;
+}
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+    .payment-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .booking-summary {
+        order: -1;
+    }
+    
+    .qr-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .qr-code {
+        margin-bottom: 20px;
+    }
+
+    .staff-profile {
+        flex-direction: column;
+    }
+
+    .staff-avatar {
+        width: 100%;
+        flex: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .details-item.total {
+        grid-column: span 1;
+    }
+    
+    .summary-item {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+    
+    .payment-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .payment-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .qr-code {
+        flex: 0 0 200px;
+    }
+    
+    .qr-code img {
+        max-width: 200px;
+    }
+}

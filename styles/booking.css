@@ -1,0 +1,168 @@
+/* CSS cho trang đặt lịch */
+
+/* Book Service Section */
+.book-service {
+    padding: 100px 0 50px;
+}
+
+.booking-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.booking-form {
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.booking-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+/* Xóa các style cho address-search-container và address-suggestions */
+/* 
+.address-search-container {
+    position: relative;
+}
+
+#address-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    z-index: 1000;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+#address-suggestions .suggestion-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+#address-suggestions .suggestion-item:last-child {
+    border-bottom: none;
+}
+
+#address-suggestions .suggestion-item:hover {
+    background-color: #f5f5f5;
+}
+
+#address-suggestions .suggestion-item .main-text {
+    font-weight: 500;
+}
+
+#address-suggestions .suggestion-item .secondary-text {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 3px;
+}
+*/
+
+/* Booking Process - phần này giữ nguyên */
+.booking-process {
+    padding: 100px 0;
+}
+
+.process-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.process-step {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    position: relative;
+}
+
+.step-number {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.process-step h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    color: var(--dark-color);
+}
+
+.process-step p {
+    color: #555;
+}
+
+/* Thêm style cho alert thông báo lỗi */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+/* Thêm style cho phần thông tin giá */
+.form-pricing {
+    margin-bottom: 20px;
+}
+
+.pricing-note {
+    background-color: #e8f4f8;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.pricing-note p {
+    margin: 0;
+    color: #555;
+}
+
+.pricing-note i {
+    color: var(--primary-color);
+    margin-right: 5px;
+}
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+    .process-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .cta .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .process-container {
+        grid-template-columns: 1fr;
+    }
+}

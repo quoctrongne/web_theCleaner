@@ -1,0 +1,632 @@
+2025-04-13 12:12:08 - Bắt đầu gửi email đến: nguyenquoctrongbt2016@gmail.com
+2025-04-13 12:12:08 - Chuẩn bị gửi email
+2025-04-13 12:12:08 - Connection: opening to smtp.gmail.com:587, timeout=300, options=array()
+2025-04-13 12:12:08 - Connection: opened
+2025-04-13 12:12:08 - SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 41be03b00d2f7-b02a0817f2dsm7234275a12.11 - gsmtp
+
+2025-04-13 12:12:08 - CLIENT -> SERVER: EHLO localhost
+
+2025-04-13 12:12:09 - SERVER -> CLIENT: 250-smtp.gmail.com at your service, [171.243.48.168]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+2025-04-13 12:12:09 - CLIENT -> SERVER: STARTTLS
+
+2025-04-13 12:12:09 - SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+2025-04-13 12:12:09 - CLIENT -> SERVER: EHLO localhost
+
+2025-04-13 12:12:09 - SERVER -> CLIENT: 250-smtp.gmail.com at your service, [171.243.48.168]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+2025-04-13 12:12:09 - CLIENT -> SERVER: AUTH LOGIN
+
+2025-04-13 12:12:09 - SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+2025-04-13 12:12:09 - CLIENT -> SERVER: [credentials hidden]
+2025-04-13 12:12:10 - SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+2025-04-13 12:12:10 - CLIENT -> SERVER: [credentials hidden]
+2025-04-13 12:12:10 - SERVER -> CLIENT: 235 2.7.0 Accepted
+
+2025-04-13 12:12:10 - CLIENT -> SERVER: MAIL FROM:<nguyenquoctrongbt2018@gmail.com>
+
+2025-04-13 12:12:10 - SERVER -> CLIENT: 250 2.1.0 OK 41be03b00d2f7-b02a0817f2dsm7234275a12.11 - gsmtp
+
+2025-04-13 12:12:10 - CLIENT -> SERVER: RCPT TO:<nguyenquoctrongbt2016@gmail.com>
+
+2025-04-13 12:12:10 - SERVER -> CLIENT: 250 2.1.5 OK 41be03b00d2f7-b02a0817f2dsm7234275a12.11 - gsmtp
+
+2025-04-13 12:12:10 - CLIENT -> SERVER: DATA
+
+2025-04-13 12:12:11 - SERVER -> CLIENT: 354 Go ahead 41be03b00d2f7-b02a0817f2dsm7234275a12.11 - gsmtp
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Date: Sun, 13 Apr 2025 12:12:08 +0700
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: To: =?UTF-8?B?dHLhu41uZw==?= <nguyenquoctrongbt2016@gmail.com>
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: From: theCleaner Service <nguyenquoctrongbt2018@gmail.com>
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Subject: =?UTF-8?Q?X=C3=A1c_Nh=E1=BA=ADn_=C4=90=E1=BA=B7t_L=E1=BB=8Bch_-_theCleaner_#11265504?=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Message-ID: <cj0THLvR856flzVZNVvCYMmKhbFGmSgUjnkfiyEtA@localhost>
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: MIME-Version: 1.0
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Content-Type: multipart/alternative;
+
+2025-04-13 12:12:11 - CLIENT -> SERVER:  boundary="b1=_cj0THLvR856flzVZNVvCYMmKhbFGmSgUjnkfiyEtA"
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: 
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: --b1=_cj0THLvR856flzVZNVvCYMmKhbFGmSgUjnkfiyEtA
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: 
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: X=C3=A1c Nh=E1=BA=ADn =C4=90=E1=BA=B7t L=E1=BB=8Bchbody{font-family:Arial,s=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: ans-serif;line-height:1.6;color:#333;margin:0;padding:0}.email-container{ma=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: x-width:600px;margin:0 auto;padding:20px}.header{background-color:#00a8ff;p=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: adding:20px;text-align:center;color:white}.content{padding:20px;background-=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: color:#f9f9f9}.booking-details{background-color:white;padding:15px;border-r=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: adius:5px;margin-bottom:20px}.booking-details table{width:100%;border-colla=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: pse:collapse}.booking-details th,.booking-details td{padding:10px;text-alig=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: n:left;border-bottom:1px solid #eee}.staff-info{background-color:white;padd=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: ing:15px;border-radius:5px;margin-bottom:20px;display:flex;align-items:flex=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: -start}.staff-avatar{width:100px;height:100px;border-radius:50%;margin-righ=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: t:15px}.staff-details{flex:1}.footer{text-align:center;padding:20px;font-si=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: ze:12px;color:#777}.button{display:inline-block;padding:10px 20px;backgroun=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: d-color:#00a8ff;color:white;text-decoration:none;border-radius:5px;margin-t=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: op:10px}.highlight{font-weight:bold;color:#00a8ff}.rating{color:#fbc531}X=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=A1c Nh=E1=BA=ADn =C4=90=E1=BA=B7t L=E1=BB=8BchC=E1=BA=A3m =C6=A1n b=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BA=A1n =C4=91=C3=A3 =C4=91=E1=BA=B7t l=E1=BB=8Bch d=E1=BB=8Bch v=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=A5 t=E1=BA=A1i theCleaner!=0A=0AXin ch=C3=A0o tr=E1=BB=8Dng,=0A=0ACh=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=BAng t=C3=B4i x=C3=A1c nh=E1=BA=ADn =C4=91=C3=A3 nh=E1=BA=ADn =C4=91=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C6=B0=E1=BB=A3c =C4=91=E1=BA=B7t l=E1=BB=8Bch d=E1=BB=8Bch v=E1=BB=A5 v=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=87 sinh c=E1=BB=A7a b=E1=BA=A1n. D=C6=B0=E1=BB=9Bi =C4=91=C3=A2y l=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=A0 chi ti=E1=BA=BFt =C4=91=E1=BA=B7t l=E1=BB=8Bch:=0A=0AChi Ti=E1=BA=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =BFt =C4=90=E1=BA=B7t L=E1=BB=8BchM=C3=A3 =C4=91=E1=BA=B7t l=E1=BB=8Bch:112=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: 65504D=E1=BB=8Bch v=E1=BB=A5:V=E1=BB=87 sinh nh=C3=A0 =E1=BB=9FNg=C3=A0y th=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=B1c hi=E1=BB=87n:14/04/2025Th=E1=BB=9Di gian:10-12=C4=90=E1=BB=8Ba c=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: h=E1=BB=89:qu=E1=BA=ADn 8Di=E1=BB=87n t=C3=ADch:1 m=C2=B2T=E1=BB=95ng thanh=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER:  to=C3=A1n:20.000 =C4=91Tr=E1=BA=A1ng th=C3=A1i thanh to=C3=A1n:=C4=90=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=A3 thanh to=C3=A1nNh=C3=A2n Vi=C3=AAn Th=E1=BB=B1c Hi=E1=BB=87nH=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=8D t=C3=AAn: Ho=C3=A0ng Minh Tu=E1=BA=A5n=0A=0AGi=E1=BB=9Bi t=C3=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =ADnh: Nam=0A=0A=C4=90=C3=A1nh gi=C3=A1: 4.9/5=0A=0AKinh nghi=E1=BB=87m: 4 =
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: n=C4=83m=0A=0ALi=C3=AAn h=E1=BB=87: 0989012345=0A=0ANh=C3=A2n vi=C3=AAn s=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BA=BD li=C3=AAn h=E1=BB=87 v=E1=BB=9Bi b=E1=BA=A1n qua s=E1=BB=91 =
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C4=91i=E1=BB=87n tho=E1=BA=A1i tr=C6=B0=E1=BB=9Bc khi =C4=91=E1=BA=BFn =
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C4=91=E1=BB=83 x=C3=A1c nh=E1=BA=ADn l=E1=BA=A1i. Vui l=C3=B2ng =C4=91=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=83 =C3=BD =C4=91i=E1=BB=87n tho=E1=BA=A1i trong th=E1=BB=9Di gian n=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=A0y.=0A=0AN=E1=BA=BFu b=E1=BA=A1n c=E1=BA=A7n thay =C4=91=E1=BB=95i l=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=8Bch ho=E1=BA=B7c c=C3=B3 b=E1=BA=A5t k=E1=BB=B3 c=C3=A2u h=E1=BB=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =8Fi n=C3=A0o, vui l=C3=B2ng li=C3=AAn h=E1=BB=87 v=E1=BB=9Bi ch=C3=BAng t=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=B4i qua s=E1=BB=91 =C4=91i=E1=BB=87n tho=E1=BA=A1i +84 123 456 789 ho=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BA=B7c email info@thecleaner.com.=0A=0AC=E1=BA=A3m =C6=A1n b=E1=BA=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =A1n =C4=91=C3=A3 s=E1=BB=AD d=E1=BB=A5ng d=E1=BB=8Bch v=E1=BB=A5 c=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=A7a theCleaner!=0A=0ATruy c=E1=BA=ADp website&copy; 2025 theCleaner.=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER:  T=E1=BA=A5t c=E1=BA=A3 c=C3=A1c quy=E1=BB=81n =C4=91=C6=B0=E1=BB=A3c b=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BA=A3o l=C6=B0u.=0A=0A=C4=90=E1=BB=8Ba ch=E1=BB=89: 123 =C4=90=C6=B0=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=9Dng ABC, Qu=E1=BA=ADn XYZ, Th=C3=A0nh ph=E1=BB=91 H=C3=A0 N=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=99i, Vi=E1=BB=87t Nam=0A=0A
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: --b1=_cj0THLvR856flzVZNVvCYMmKhbFGmSgUjnkfiyEtA
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: 
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: <!DOCTYPE html><html><head><meta charset=3D"UTF-8"><meta name=3D"viewport" =
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: content=3D"width=3Ddevice-width, initial-scale=3D1.0"><title>X=C3=A1c Nh=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BA=ADn =C4=90=E1=BA=B7t L=E1=BB=8Bch</title><style>body{font-family:Ari=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: al,sans-serif;line-height:1.6;color:#333;margin:0;padding:0}.email-containe=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: r{max-width:600px;margin:0 auto;padding:20px}.header{background-color:#00a8=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: ff;padding:20px;text-align:center;color:white}.content{padding:20px;backgro=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: und-color:#f9f9f9}.booking-details{background-color:white;padding:15px;bord=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: er-radius:5px;margin-bottom:20px}.booking-details table{width:100%;border-c=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: ollapse:collapse}.booking-details th,.booking-details td{padding:10px;text-=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: align:left;border-bottom:1px solid #eee}.staff-info{background-color:white;=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: padding:15px;border-radius:5px;margin-bottom:20px;display:flex;align-items:=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: flex-start}.staff-avatar{width:100px;height:100px;border-radius:50%;margin-=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: right:15px}.staff-details{flex:1}.footer{text-align:center;padding:20px;fon=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: t-size:12px;color:#777}.button{display:inline-block;padding:10px 20px;backg=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: round-color:#00a8ff;color:white;text-decoration:none;border-radius:5px;marg=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: in-top:10px}.highlight{font-weight:bold;color:#00a8ff}.rating{color:#fbc531=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: }</style></head><body><div class=3D"email-container"><div class=3D"header">=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: <h1>X=C3=A1c Nh=E1=BA=ADn =C4=90=E1=BA=B7t L=E1=BB=8Bch</h1><p>C=E1=BA=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =A3m =C6=A1n b=E1=BA=A1n =C4=91=C3=A3 =C4=91=E1=BA=B7t l=E1=BB=8Bch d=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=8Bch v=E1=BB=A5 t=E1=BA=A1i theCleaner!</p></div><div class=3D"conte=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: nt"><p>Xin ch=C3=A0o <strong>tr=E1=BB=8Dng</strong>,</p><p>Ch=C3=BAng t=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=B4i x=C3=A1c nh=E1=BA=ADn =C4=91=C3=A3 nh=E1=BA=ADn =C4=91=C6=B0=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=A3c =C4=91=E1=BA=B7t l=E1=BB=8Bch d=E1=BB=8Bch v=E1=BB=A5 v=E1=BB=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =87 sinh c=E1=BB=A7a b=E1=BA=A1n. D=C6=B0=E1=BB=9Bi =C4=91=C3=A2y l=C3=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =A0 chi ti=E1=BA=BFt =C4=91=E1=BA=B7t l=E1=BB=8Bch:</p><div class=3D"bookin=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: g-details"><h2>Chi Ti=E1=BA=BFt =C4=90=E1=BA=B7t L=E1=BB=8Bch</h2><table><t=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: r><th>M=C3=A3 =C4=91=E1=BA=B7t l=E1=BB=8Bch:</th><td class=3D"highlight">11=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: 265504</td></tr><tr><th>D=E1=BB=8Bch v=E1=BB=A5:</th><td>V=E1=BB=87 sinh nh=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=A0 =E1=BB=9F</td></tr><tr><th>Ng=C3=A0y th=E1=BB=B1c hi=E1=BB=87n:</th>=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: <td>14/04/2025</td></tr><tr><th>Th=E1=BB=9Di gian:</th><td>10-12</td></tr><=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: tr><th>=C4=90=E1=BB=8Ba ch=E1=BB=89:</th><td>qu=E1=BA=ADn 8</td></tr><tr><t=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: h>Di=E1=BB=87n t=C3=ADch:</th><td>1 m=C2=B2</td></tr><tr><th>T=E1=BB=95ng t=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: hanh to=C3=A1n:</th><td class=3D"highlight">20.000 =C4=91</td></tr><tr><th>=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Tr=E1=BA=A1ng th=C3=A1i thanh to=C3=A1n:</th><td>=C4=90=C3=A3 thanh to=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=A1n</td></tr></table></div><div class=3D"staff-info"><img src=3D"http:/=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: /localhost/images/cleaner9.jpg" alt=3D"Ho=C3=A0ng Minh Tu=E1=BA=A5n" class=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =3D"staff-avatar"><div class=3D"staff-details"><h2>Nh=C3=A2n Vi=C3=AAn Th=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=B1c Hi=E1=BB=87n</h2><p><strong>H=E1=BB=8D t=C3=AAn:</strong> Ho=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=A0ng Minh Tu=E1=BA=A5n</p><p><strong>Gi=E1=BB=9Bi t=C3=ADnh:</strong> N=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: am</p><p><strong>=C4=90=C3=A1nh gi=C3=A1:</strong> <span class=3D"rating">4=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: ..9/5</span></p><p><strong>Kinh nghi=E1=BB=87m:</strong> 4 n=C4=83m</p><p><s=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: trong>Li=C3=AAn h=E1=BB=87:</strong> 0989012345</p></div></div><p>Nh=C3=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =A2n vi=C3=AAn s=E1=BA=BD li=C3=AAn h=E1=BB=87 v=E1=BB=9Bi b=E1=BA=A1n qua =
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: s=E1=BB=91 =C4=91i=E1=BB=87n tho=E1=BA=A1i tr=C6=B0=E1=BB=9Bc khi =C4=91=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BA=BFn =C4=91=E1=BB=83 x=C3=A1c nh=E1=BA=ADn l=E1=BA=A1i. Vui l=C3=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =B2ng =C4=91=E1=BB=83 =C3=BD =C4=91i=E1=BB=87n tho=E1=BA=A1i trong th=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=9Di gian n=C3=A0y.</p><p>N=E1=BA=BFu b=E1=BA=A1n c=E1=BA=A7n thay =
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C4=91=E1=BB=95i l=E1=BB=8Bch ho=E1=BA=B7c c=C3=B3 b=E1=BA=A5t k=E1=BB=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =B3 c=C3=A2u h=E1=BB=8Fi n=C3=A0o, vui l=C3=B2ng li=C3=AAn h=E1=BB=87 v=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BB=9Bi ch=C3=BAng t=C3=B4i qua s=E1=BB=91 =C4=91i=E1=BB=87n tho=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BA=A1i <strong>+84 123 456 789</strong> ho=E1=BA=B7c email <strong>info=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: @thecleaner.com</strong>.</p><p>C=E1=BA=A3m =C6=A1n b=E1=BA=A1n =C4=91=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =C3=A3 s=E1=BB=AD d=E1=BB=A5ng d=E1=BB=8Bch v=E1=BB=A5 c=E1=BB=A7a theClean=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: er!</p><a href=3D"http://localhost" class=3D"button">Truy c=E1=BA=ADp websi=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: te</a></div><div class=3D"footer"><p>&copy; 2025 theCleaner. T=E1=BA=A5t c=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =E1=BA=A3 c=C3=A1c quy=E1=BB=81n =C4=91=C6=B0=E1=BB=A3c b=E1=BA=A3o l=C6=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =B0u.</p><p>=C4=90=E1=BB=8Ba ch=E1=BB=89: 123 =C4=90=C6=B0=E1=BB=9Dng ABC, =
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: Qu=E1=BA=ADn XYZ, Th=C3=A0nh ph=E1=BB=91 H=C3=A0 N=E1=BB=99i, Vi=E1=BB=
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: =87t Nam</p></div></div></body></html>
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: 
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: --b1=_cj0THLvR856flzVZNVvCYMmKhbFGmSgUjnkfiyEtA--
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: 
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: .
+
+2025-04-13 12:12:11 - SERVER -> CLIENT: 250 2.0.0 OK  1744521132 41be03b00d2f7-b02a0817f2dsm7234275a12.11 - gsmtp
+
+2025-04-13 12:12:11 - CLIENT -> SERVER: QUIT
+
+2025-04-13 12:12:12 - SERVER -> CLIENT: 221 2.0.0 closing connection 41be03b00d2f7-b02a0817f2dsm7234275a12.11 - gsmtp
+
+2025-04-13 12:12:12 - Connection: closed
+2025-04-13 12:12:12 - Email đã gửi thành công
+2025-04-13 12:45:38 - Bắt đầu gửi email đến: nguyenquoctrongbt2016@gmail.com
+2025-04-13 12:45:38 - Chuẩn bị gửi email
+2025-04-13 12:45:38 - Connection: opening to smtp.gmail.com:587, timeout=300, options=array()
+2025-04-13 12:45:38 - Connection: opened
+2025-04-13 12:45:38 - SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 41be03b00d2f7-b02a321f082sm7275741a12.68 - gsmtp
+
+2025-04-13 12:45:38 - CLIENT -> SERVER: EHLO localhost
+
+2025-04-13 12:45:38 - SERVER -> CLIENT: 250-smtp.gmail.com at your service, [171.243.48.168]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+2025-04-13 12:45:38 - CLIENT -> SERVER: STARTTLS
+
+2025-04-13 12:45:38 - SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+2025-04-13 12:45:39 - CLIENT -> SERVER: EHLO localhost
+
+2025-04-13 12:45:39 - SERVER -> CLIENT: 250-smtp.gmail.com at your service, [171.243.48.168]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+2025-04-13 12:45:39 - CLIENT -> SERVER: AUTH LOGIN
+
+2025-04-13 12:45:39 - SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+2025-04-13 12:45:39 - CLIENT -> SERVER: [credentials hidden]
+2025-04-13 12:45:39 - SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+2025-04-13 12:45:39 - CLIENT -> SERVER: [credentials hidden]
+2025-04-13 12:45:40 - SERVER -> CLIENT: 235 2.7.0 Accepted
+
+2025-04-13 12:45:40 - CLIENT -> SERVER: MAIL FROM:<nguyenquoctrongbt2018@gmail.com>
+
+2025-04-13 12:45:40 - SERVER -> CLIENT: 250 2.1.0 OK 41be03b00d2f7-b02a321f082sm7275741a12.68 - gsmtp
+
+2025-04-13 12:45:40 - CLIENT -> SERVER: RCPT TO:<nguyenquoctrongbt2016@gmail.com>
+
+2025-04-13 12:45:40 - SERVER -> CLIENT: 250 2.1.5 OK 41be03b00d2f7-b02a321f082sm7275741a12.68 - gsmtp
+
+2025-04-13 12:45:40 - CLIENT -> SERVER: DATA
+
+2025-04-13 12:45:41 - SERVER -> CLIENT: 354 Go ahead 41be03b00d2f7-b02a321f082sm7275741a12.68 - gsmtp
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Date: Sun, 13 Apr 2025 12:45:38 +0700
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: To: =?UTF-8?B?dHLhu41uZw==?= <nguyenquoctrongbt2016@gmail.com>
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: From: theCleaner Service <nguyenquoctrongbt2018@gmail.com>
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Subject: =?UTF-8?Q?X=C3=A1c_Nh=E1=BA=ADn_=C4=90=E1=BA=B7t_L=E1=BB=8Bch_-_theCleaner_#77542316?=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Message-ID: <8FAIRryhdR4MjgJ4cokuqfM7OheGGzKKVpTYeBRPI@localhost>
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: MIME-Version: 1.0
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Content-Type: multipart/alternative;
+
+2025-04-13 12:45:41 - CLIENT -> SERVER:  boundary="b1=_8FAIRryhdR4MjgJ4cokuqfM7OheGGzKKVpTYeBRPI"
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: 
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: --b1=_8FAIRryhdR4MjgJ4cokuqfM7OheGGzKKVpTYeBRPI
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Content-Type: text/plain; charset=UTF-8
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: 
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: X=C3=A1c Nh=E1=BA=ADn =C4=90=E1=BA=B7t L=E1=BB=8Bchbody{font-family:Arial,s=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: ans-serif;line-height:1.6;color:#333;margin:0;padding:0}.email-container{ma=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: x-width:600px;margin:0 auto;padding:20px}.header{background-color:#00a8ff;p=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: adding:20px;text-align:center;color:white}.content{padding:20px;background-=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: color:#f9f9f9}.booking-details{background-color:white;padding:15px;border-r=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: adius:5px;margin-bottom:20px}.booking-details table{width:100%;border-colla=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: pse:collapse}.booking-details th,.booking-details td{padding:10px;text-alig=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: n:left;border-bottom:1px solid #eee}.staff-info{background-color:white;padd=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: ing:15px;border-radius:5px;margin-bottom:20px;display:flex;align-items:flex=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: -start}.staff-avatar{width:100px;height:100px;border-radius:50%;margin-righ=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: t:15px}.staff-details{flex:1}.footer{text-align:center;padding:20px;font-si=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: ze:12px;color:#777}.button{display:inline-block;padding:10px 20px;backgroun=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: d-color:#00a8ff;color:white;text-decoration:none;border-radius:5px;margin-t=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: op:10px}.highlight{font-weight:bold;color:#00a8ff}.rating{color:#fbc531}X=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=A1c Nh=E1=BA=ADn =C4=90=E1=BA=B7t L=E1=BB=8BchC=E1=BA=A3m =C6=A1n b=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BA=A1n =C4=91=C3=A3 =C4=91=E1=BA=B7t l=E1=BB=8Bch d=E1=BB=8Bch v=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=A5 t=E1=BA=A1i theCleaner!=0A=0AXin ch=C3=A0o tr=E1=BB=8Dng,=0A=0ACh=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=BAng t=C3=B4i x=C3=A1c nh=E1=BA=ADn =C4=91=C3=A3 nh=E1=BA=ADn =C4=91=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C6=B0=E1=BB=A3c =C4=91=E1=BA=B7t l=E1=BB=8Bch d=E1=BB=8Bch v=E1=BB=A5 v=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=87 sinh c=E1=BB=A7a b=E1=BA=A1n. D=C6=B0=E1=BB=9Bi =C4=91=C3=A2y l=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=A0 chi ti=E1=BA=BFt =C4=91=E1=BA=B7t l=E1=BB=8Bch:=0A=0AChi Ti=E1=BA=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =BFt =C4=90=E1=BA=B7t L=E1=BB=8BchM=C3=A3 =C4=91=E1=BA=B7t l=E1=BB=8Bch:775=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: 42316D=E1=BB=8Bch v=E1=BB=A5:V=E1=BB=87 sinh nh=C3=A0 =E1=BB=9FNg=C3=A0y th=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=B1c hi=E1=BB=87n:14/04/2025Th=E1=BB=9Di gian:10-12=C4=90=E1=BB=8Ba c=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: h=E1=BB=89:qu=E1=BA=ADn 8Di=E1=BB=87n t=C3=ADch:1 m=C2=B2T=E1=BB=95ng thanh=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER:  to=C3=A1n:20.000 =C4=91Tr=E1=BA=A1ng th=C3=A1i thanh to=C3=A1n:=C4=90=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=A3 thanh to=C3=A1nNh=C3=A2n Vi=C3=AAn Th=E1=BB=B1c Hi=E1=BB=87nH=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=8D t=C3=AAn: Ho=C3=A0ng Minh Tu=E1=BA=A5n=0A=0AGi=E1=BB=9Bi t=C3=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =ADnh: Nam=0A=0A=C4=90=C3=A1nh gi=C3=A1: 4.9/5=0A=0AKinh nghi=E1=BB=87m: 4 =
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: n=C4=83m=0A=0ALi=C3=AAn h=E1=BB=87: 0989012345=0A=0ANh=C3=A2n vi=C3=AAn s=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BA=BD li=C3=AAn h=E1=BB=87 v=E1=BB=9Bi b=E1=BA=A1n qua s=E1=BB=91 =
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C4=91i=E1=BB=87n tho=E1=BA=A1i tr=C6=B0=E1=BB=9Bc khi =C4=91=E1=BA=BFn =
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C4=91=E1=BB=83 x=C3=A1c nh=E1=BA=ADn l=E1=BA=A1i. Vui l=C3=B2ng =C4=91=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=83 =C3=BD =C4=91i=E1=BB=87n tho=E1=BA=A1i trong th=E1=BB=9Di gian n=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=A0y.=0A=0AN=E1=BA=BFu b=E1=BA=A1n c=E1=BA=A7n thay =C4=91=E1=BB=95i l=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=8Bch ho=E1=BA=B7c c=C3=B3 b=E1=BA=A5t k=E1=BB=B3 c=C3=A2u h=E1=BB=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =8Fi n=C3=A0o, vui l=C3=B2ng li=C3=AAn h=E1=BB=87 v=E1=BB=9Bi ch=C3=BAng t=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=B4i qua s=E1=BB=91 =C4=91i=E1=BB=87n tho=E1=BA=A1i +84 123 456 789 ho=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BA=B7c email info@thecleaner.com.=0A=0AC=E1=BA=A3m =C6=A1n b=E1=BA=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =A1n =C4=91=C3=A3 s=E1=BB=AD d=E1=BB=A5ng d=E1=BB=8Bch v=E1=BB=A5 c=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=A7a theCleaner!=0A=0ATruy c=E1=BA=ADp website&copy; 2025 theCleaner.=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER:  T=E1=BA=A5t c=E1=BA=A3 c=C3=A1c quy=E1=BB=81n =C4=91=C6=B0=E1=BB=A3c b=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BA=A3o l=C6=B0u.=0A=0A=C4=90=E1=BB=8Ba ch=E1=BB=89: 123 =C4=90=C6=B0=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=9Dng ABC, Qu=E1=BA=ADn XYZ, Th=C3=A0nh ph=E1=BB=91 H=C3=A0 N=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=99i, Vi=E1=BB=87t Nam=0A=0A
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: --b1=_8FAIRryhdR4MjgJ4cokuqfM7OheGGzKKVpTYeBRPI
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Content-Type: text/html; charset=UTF-8
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Content-Transfer-Encoding: quoted-printable
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: 
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: <!DOCTYPE html><html><head><meta charset=3D"UTF-8"><meta name=3D"viewport" =
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: content=3D"width=3Ddevice-width, initial-scale=3D1.0"><title>X=C3=A1c Nh=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BA=ADn =C4=90=E1=BA=B7t L=E1=BB=8Bch</title><style>body{font-family:Ari=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: al,sans-serif;line-height:1.6;color:#333;margin:0;padding:0}.email-containe=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: r{max-width:600px;margin:0 auto;padding:20px}.header{background-color:#00a8=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: ff;padding:20px;text-align:center;color:white}.content{padding:20px;backgro=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: und-color:#f9f9f9}.booking-details{background-color:white;padding:15px;bord=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: er-radius:5px;margin-bottom:20px}.booking-details table{width:100%;border-c=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: ollapse:collapse}.booking-details th,.booking-details td{padding:10px;text-=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: align:left;border-bottom:1px solid #eee}.staff-info{background-color:white;=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: padding:15px;border-radius:5px;margin-bottom:20px;display:flex;align-items:=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: flex-start}.staff-avatar{width:100px;height:100px;border-radius:50%;margin-=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: right:15px}.staff-details{flex:1}.footer{text-align:center;padding:20px;fon=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: t-size:12px;color:#777}.button{display:inline-block;padding:10px 20px;backg=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: round-color:#00a8ff;color:white;text-decoration:none;border-radius:5px;marg=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: in-top:10px}.highlight{font-weight:bold;color:#00a8ff}.rating{color:#fbc531=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: }</style></head><body><div class=3D"email-container"><div class=3D"header">=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: <h1>X=C3=A1c Nh=E1=BA=ADn =C4=90=E1=BA=B7t L=E1=BB=8Bch</h1><p>C=E1=BA=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =A3m =C6=A1n b=E1=BA=A1n =C4=91=C3=A3 =C4=91=E1=BA=B7t l=E1=BB=8Bch d=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=8Bch v=E1=BB=A5 t=E1=BA=A1i theCleaner!</p></div><div class=3D"conte=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: nt"><p>Xin ch=C3=A0o <strong>tr=E1=BB=8Dng</strong>,</p><p>Ch=C3=BAng t=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=B4i x=C3=A1c nh=E1=BA=ADn =C4=91=C3=A3 nh=E1=BA=ADn =C4=91=C6=B0=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=A3c =C4=91=E1=BA=B7t l=E1=BB=8Bch d=E1=BB=8Bch v=E1=BB=A5 v=E1=BB=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =87 sinh c=E1=BB=A7a b=E1=BA=A1n. D=C6=B0=E1=BB=9Bi =C4=91=C3=A2y l=C3=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =A0 chi ti=E1=BA=BFt =C4=91=E1=BA=B7t l=E1=BB=8Bch:</p><div class=3D"bookin=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: g-details"><h2>Chi Ti=E1=BA=BFt =C4=90=E1=BA=B7t L=E1=BB=8Bch</h2><table><t=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: r><th>M=C3=A3 =C4=91=E1=BA=B7t l=E1=BB=8Bch:</th><td class=3D"highlight">77=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: 542316</td></tr><tr><th>D=E1=BB=8Bch v=E1=BB=A5:</th><td>V=E1=BB=87 sinh nh=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=A0 =E1=BB=9F</td></tr><tr><th>Ng=C3=A0y th=E1=BB=B1c hi=E1=BB=87n:</th>=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: <td>14/04/2025</td></tr><tr><th>Th=E1=BB=9Di gian:</th><td>10-12</td></tr><=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: tr><th>=C4=90=E1=BB=8Ba ch=E1=BB=89:</th><td>qu=E1=BA=ADn 8</td></tr><tr><t=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: h>Di=E1=BB=87n t=C3=ADch:</th><td>1 m=C2=B2</td></tr><tr><th>T=E1=BB=95ng t=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: hanh to=C3=A1n:</th><td class=3D"highlight">20.000 =C4=91</td></tr><tr><th>=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Tr=E1=BA=A1ng th=C3=A1i thanh to=C3=A1n:</th><td>=C4=90=C3=A3 thanh to=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=A1n</td></tr></table></div><div class=3D"staff-info"><img src=3D"http:/=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: /localhost/images/cleaner9.jpg" alt=3D"Ho=C3=A0ng Minh Tu=E1=BA=A5n" class=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =3D"staff-avatar"><div class=3D"staff-details"><h2>Nh=C3=A2n Vi=C3=AAn Th=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=B1c Hi=E1=BB=87n</h2><p><strong>H=E1=BB=8D t=C3=AAn:</strong> Ho=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=A0ng Minh Tu=E1=BA=A5n</p><p><strong>Gi=E1=BB=9Bi t=C3=ADnh:</strong> N=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: am</p><p><strong>=C4=90=C3=A1nh gi=C3=A1:</strong> <span class=3D"rating">4=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: ..9/5</span></p><p><strong>Kinh nghi=E1=BB=87m:</strong> 4 n=C4=83m</p><p><s=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: trong>Li=C3=AAn h=E1=BB=87:</strong> 0989012345</p></div></div><p>Nh=C3=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =A2n vi=C3=AAn s=E1=BA=BD li=C3=AAn h=E1=BB=87 v=E1=BB=9Bi b=E1=BA=A1n qua =
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: s=E1=BB=91 =C4=91i=E1=BB=87n tho=E1=BA=A1i tr=C6=B0=E1=BB=9Bc khi =C4=91=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BA=BFn =C4=91=E1=BB=83 x=C3=A1c nh=E1=BA=ADn l=E1=BA=A1i. Vui l=C3=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =B2ng =C4=91=E1=BB=83 =C3=BD =C4=91i=E1=BB=87n tho=E1=BA=A1i trong th=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=9Di gian n=C3=A0y.</p><p>N=E1=BA=BFu b=E1=BA=A1n c=E1=BA=A7n thay =
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C4=91=E1=BB=95i l=E1=BB=8Bch ho=E1=BA=B7c c=C3=B3 b=E1=BA=A5t k=E1=BB=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =B3 c=C3=A2u h=E1=BB=8Fi n=C3=A0o, vui l=C3=B2ng li=C3=AAn h=E1=BB=87 v=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BB=9Bi ch=C3=BAng t=C3=B4i qua s=E1=BB=91 =C4=91i=E1=BB=87n tho=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BA=A1i <strong>+84 123 456 789</strong> ho=E1=BA=B7c email <strong>info=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: @thecleaner.com</strong>.</p><p>C=E1=BA=A3m =C6=A1n b=E1=BA=A1n =C4=91=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =C3=A3 s=E1=BB=AD d=E1=BB=A5ng d=E1=BB=8Bch v=E1=BB=A5 c=E1=BB=A7a theClean=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: er!</p><a href=3D"http://localhost" class=3D"button">Truy c=E1=BA=ADp websi=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: te</a></div><div class=3D"footer"><p>&copy; 2025 theCleaner. T=E1=BA=A5t c=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =E1=BA=A3 c=C3=A1c quy=E1=BB=81n =C4=91=C6=B0=E1=BB=A3c b=E1=BA=A3o l=C6=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =B0u.</p><p>=C4=90=E1=BB=8Ba ch=E1=BB=89: 123 =C4=90=C6=B0=E1=BB=9Dng ABC, =
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: Qu=E1=BA=ADn XYZ, Th=C3=A0nh ph=E1=BB=91 H=C3=A0 N=E1=BB=99i, Vi=E1=BB=
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: =87t Nam</p></div></div></body></html>
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: 
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: --b1=_8FAIRryhdR4MjgJ4cokuqfM7OheGGzKKVpTYeBRPI--
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: 
+
+2025-04-13 12:45:41 - CLIENT -> SERVER: .
+
+2025-04-13 12:45:42 - SERVER -> CLIENT: 250 2.0.0 OK  1744523142 41be03b00d2f7-b02a321f082sm7275741a12.68 - gsmtp
+
+2025-04-13 12:45:42 - CLIENT -> SERVER: QUIT
+
+2025-04-13 12:45:42 - SERVER -> CLIENT: 221 2.0.0 closing connection 41be03b00d2f7-b02a321f082sm7275741a12.68 - gsmtp
+
+2025-04-13 12:45:42 - Connection: closed
+2025-04-13 12:45:42 - Email đã gửi thành công

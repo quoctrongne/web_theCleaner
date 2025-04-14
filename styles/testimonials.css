@@ -1,0 +1,277 @@
+/* CSS Trang đánh giá */
+
+/* Testimonial Highlights */
+.testimonial-highlights {
+    padding: 100px 0;
+    background-color: #f8f9fa;
+}
+
+.testimonial-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.stat {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.stat h3 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.rating-breakdown {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.rating-breakdown h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.rating-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.rating-label {
+    width: 60px;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 10px;
+    background: #eee;
+    border-radius: 5px;
+    margin: 0 15px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: var(--primary-color);
+}
+
+.rating-percent {
+    width: 40px;
+    text-align: right;
+}
+
+/* Featured Testimonials */
+.featured-testimonials {
+    padding: 100px 0;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.testimonial-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-10px);
+}
+
+.testimonial-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.testimonial-header img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.testimonial-header h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.testimonial-header p {
+    font-size: 14px;
+    color: #777;
+}
+
+.rating {
+    color: #fbc531;
+    margin-top: 5px;
+}
+
+.testimonial-content {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.testimonial-service {
+    font-size: 14px;
+    color: #777;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+/* Before & After */
+.before-after {
+    padding: 100px 0;
+    background-color: #f1f2f6;
+}
+
+.before-after-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.before-after-item {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.before-after-item:hover {
+    transform: translateY(-10px);
+}
+
+.before-image, .after-image {
+    position: relative;
+    height: 200px;
+}
+
+.before-image img, .after-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.label {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.before-after-caption {
+    padding: 20px;
+    text-align: center;
+}
+
+/* Submit Testimonial */
+.submit-testimonial {
+    padding: 100px 0;
+}
+
+.testimonial-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.testimonial-form {
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.rating-select {
+    margin-bottom: 20px;
+}
+
+.rating-select p {
+    margin-bottom: 10px;
+}
+
+.star-rating {
+    display: flex;
+    font-size: 24px;
+    color: #fbc531;
+}
+
+.star-rating i {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.file-upload {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #f1f2f6;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.file-upload:hover {
+    background: #e3e4e8;
+}
+
+.file-upload input {
+    display: none;
+}
+
+.file-upload i {
+    margin-right: 10px;
+}
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+    .testimonial-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .before-after-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .before-after-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .testimonial-stats {
+        grid-template-columns: 1fr;
+    }
+}
