@@ -122,5 +122,5 @@ Website sử dụng cơ sở dữ liệu MySQL với các bảng chính sau:
 ## Hỗ trợ
 
 Nếu bạn có câu hỏi hoặc cần hỗ trợ, vui lòng liên hệ:
-- Email: support@thecleaner.com
-- Điện thoại: +84 123 456 789
+- Email: ***
+- Điện thoại: ***
